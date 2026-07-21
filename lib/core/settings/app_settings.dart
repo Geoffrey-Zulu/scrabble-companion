@@ -1,6 +1,4 @@
-/// User-facing preferences.
-///
-/// Persistence lands in Milestone 3 (Drift). Until then this lives in memory.
+/// User-facing preferences. Persisted via Drift ([SettingsRepository]).
 enum AppThemeMode { light, dark, system }
 
 enum TextScaleOption {

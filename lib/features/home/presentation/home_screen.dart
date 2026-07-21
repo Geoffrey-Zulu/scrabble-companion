@@ -6,6 +6,7 @@ import '../../../core/design/design.dart';
 import '../../../core/widgets/sc_buttons.dart';
 import '../../../core/widgets/sc_card.dart';
 import '../../../core/widgets/toast_controller.dart';
+import '../../timer/application/timer_notifier.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -25,6 +26,8 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
+    final timer = ref.watch(timerProvider);
+    final timerNotifier = ref.read(timerProvider.notifier);
 
     return Scaffold(
       body: SafeArea(
@@ -67,7 +70,7 @@ class HomeScreen extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          '1:00',
+                          timer.formattedRemaining,
                           style: textTheme.displayMedium?.copyWith(
                             color: colors.ink,
                           ),
@@ -76,7 +79,14 @@ class HomeScreen extends ConsumerWidget {
                       SizedBox(
                         height: 44,
                         child: FilledButton(
-                          onPressed: () => context.go('/timer'),
+                          onPressed: () async {
+                            if (!timer.isRunning) {
+                              await timerNotifier.resumeOrStart();
+                            }
+                            if (context.mounted) {
+                              context.go('/timer');
+                            }
+                          },
                           style: FilledButton.styleFrom(
                             backgroundColor: colors.accent,
                             foregroundColor: colors.onAccent,
@@ -85,7 +95,7 @@ class HomeScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(22),
                             ),
                           ),
-                          child: const Text('Start'),
+                          child: Text(timer.isRunning ? 'Open' : 'Start'),
                         ),
                       ),
                     ],

@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Settings screen with Drift-backed persistence.
 - Offline dictionary: NWL2023 + CSW21 + ospd-defs, word checker UI with
   suggestions, favorites, and recent lookups.
+- Turn timer with Stopwatch-based countdown, ring UI, durations, warn
+  threshold, sound A/B/off, haptics, and pause-on-background.
 - Launcher icons installed from `assets/icons/` into Android/iOS; store masters
   under `assets/store/`.
 - Audio assets under `assets/audio/`; CI workflow (format, analyze, test).
@@ -30,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Notes
 
-- Timer and score keeper feature logic still pending.
+- Score keeper feature logic still pending (player chips on timer follow).
 - `logo_android/` / `logo_ios/` are unused brand leftovers (not wired into UI).
 
 

@@ -88,18 +88,18 @@ Last updated: **2026-07-21**
 
 ## Milestone 5 — Timer
 
-- [ ] Precise ticker (prefer `Stopwatch` + animation/TVs over naïve 1s `Timer` drift)
-- [ ] Durations: 30 / 60 / 120 / 180 seconds
-- [ ] Pause / resume / reset
-- [ ] Circular progress ring with warn color transition
-- [ ] Warning threshold setting (5 / 10 / 20 / 30s)
-- [ ] Sound: Off / Sound A (`sound1.mp3`) / Sound B (`sound2.mp3`) + volume
-- [ ] Haptics on start, pause, warn ticks, expiry
+- [x] Precise ticker (prefer `Stopwatch` + animation/TVs over naïve 1s `Timer` drift)
+- [x] Durations: 30 / 60 / 120 / 180 seconds
+- [x] Pause / resume / reset
+- [x] Circular progress ring with warn color transition
+- [x] Warning threshold setting (5 / 10 / 20 / 30s)
+- [x] Sound: Off / Sound A (`sound1.mp3`) / Sound B (`sound2.mp3`) + volume
+- [x] Haptics on start, pause, warn ticks, expiry
 - [ ] Player chips when active game exists; switch player resets remaining
-- [ ] Standalone mode copy when no game
-- [ ] Background / lifecycle: pause or freeze accurately; document behavior
+- [x] Standalone mode copy when no game
+- [x] Background / lifecycle: pause or freeze accurately; document behavior
 - [ ] Landscape-friendly layout (optional stretch goal for v1.1)
-- [ ] Widget + unit tests for timer state machine
+- [x] Widget + unit tests for timer state machine
 
 ---
 
