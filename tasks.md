@@ -18,37 +18,37 @@ Last updated: **2026-07-21**
 - [x] Create README, docs/, ADRs, CHANGELOG, LICENSE, .gitignore, analysis_options
 - [x] Skip Melos (single-package app) — document rationale
 - [x] Initialize `develop` branch and document PR workflow
-- [ ] Scaffold Flutter project (`flutter create`) with org/bundle IDs
-- [ ] Move sounds into `assets/audio/` and register in pubspec
-- [ ] Add CI workflow skeleton (analyze + test + format)
+- [x] Scaffold Flutter project (`flutter create`) with org/bundle IDs
+- [x] Move sounds into `assets/audio/` and register in pubspec
+- [x] Add CI workflow skeleton (analyze + test + format)
 
 ---
 
 ## Milestone 1 — Architecture & app shell
 
-- [ ] Create feature-first folder structure under `lib/`
-- [ ] Wire `ProviderScope` + app bootstrap
-- [ ] Implement design tokens (`AppColors`, `AppSpacing`, `AppRadii`, `AppMotion`, `AppTypography`)
-- [ ] Implement ThemeData light + dark + system resolution
-- [ ] Implement text scale setting (Small / Default / Large)
-- [ ] go_router with `StatefulShellRoute` for Home / Timer / Dictionary / Settings
-- [ ] Splash screen matching prototype (`tileIn` + fade brand)
-- [ ] Shared chrome: bottom nav, toast, bottom sheet scaffold
-- [ ] Accessibility baseline: semantics, min touch targets 44×44, contrast check
+- [x] Create feature-first folder structure under `lib/`
+- [x] Wire `ProviderScope` + app bootstrap
+- [x] Implement design tokens (`AppColors`, `AppSpacing`, `AppRadii`, `AppMotion`, `AppTypography`)
+- [x] Implement ThemeData light + dark + system resolution
+- [x] Implement text scale setting (Small / Default / Large)
+- [x] go_router with `StatefulShellRoute` for Home / Timer / Dictionary / Settings
+- [x] Splash screen matching prototype (`tileIn` + fade brand)
+- [x] Shared chrome: bottom nav, toast, bottom sheet scaffold
+- [x] Accessibility baseline: semantics, min touch targets 44×44, contrast check
 
 ---
 
 ## Milestone 2 — Design system & reusable widgets
 
-- [ ] `ScCard` (home feature cards)
-- [ ] `ScPrimaryButton` / `ScSecondaryButton` / `ScIconButton`
+- [x] `ScCard` (home feature cards)
+- [x] `ScPrimaryButton` / `ScSecondaryButton` / `ScIconButton`
 - [ ] `ScSearchField` (pill field, uppercase filter)
 - [ ] `ScSegmentedControl` (theme, durations, warn opts)
 - [ ] `ScToggle` (settings switches)
 - [ ] `ScAvatarInitial` (recent games / player rows)
-- [ ] `ScBottomNav`
-- [ ] `ScToast`
-- [ ] `ScBottomSheet` (score keypad, new game)
+- [x] `ScBottomNav`
+- [x] `ScToast`
+- [x] `ScBottomSheet` (score keypad, new game)
 - [ ] Icon set (stroke icons matching prototype SVG paths)
 - [ ] Golden tests for key atoms in light + dark
 

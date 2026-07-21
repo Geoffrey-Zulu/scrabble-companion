@@ -4,8 +4,8 @@ A premium, offline-first Flutter companion for Scrabble nights: turn timer,
 tournament word checker with definitions, multi-player score keeper, and
 polished settings — designed to feel like a shipping App Store product.
 
-> **Status:** Engineering foundation complete. Flutter app scaffolding is next
-> (see [`tasks.md`](tasks.md)).
+> **Status:** Milestone 1 complete — runnable app shell with design system.
+> Next: Drift persistence + dictionary (see [`tasks.md`](tasks.md)).
 
 ---
 

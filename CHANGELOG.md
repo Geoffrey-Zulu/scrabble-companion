@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Flutter app scaffold (`scrabble_companion`, org `com.geoffreyzulu`) on
+  Flutter 3.44 / Dart 3.12.
+- Feature-first `lib/` layout with Riverpod bootstrap and go_router shell
+  (Home / Timer / Dictionary / Settings).
+- Design tokens and ThemeData for light + dark; system theme + text scale.
+- Splash, bottom nav, toast host, bottom sheet helper, and core `Sc*` widgets.
+- Settings screen wired to in-memory preferences (persistence in Milestone 3).
+- Audio assets under `assets/audio/`; CI workflow (format, analyze, test).
 - Engineering foundation: repository documentation, ADRs, task tracker, lint
   configuration, and design-system import from Claude Design handoff.
 - Restored offline `ospd-defs.txt` definitions corpus (was empty placeholder).
@@ -18,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Notes
 
-- Application source code not yet scaffolded; see `tasks.md` for milestones.
+- Timer / dictionary / score keeper feature logic still pending; shell UI is live.
 
 ## [0.0.0] - 2026-07-21
 
