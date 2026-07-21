@@ -65,6 +65,7 @@ class HapticsService {
     if (!_isEnabled()) {
       return;
     }
-    await HapticFeedback.selectionClick();
+    // Using mediumImpact for tactile "click" across all devices.
+    await HapticFeedback.mediumImpact();
   }
 }

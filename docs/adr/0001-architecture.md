@@ -1,4 +1,4 @@
-# ADR-0001 — Feature-first Clean Architecture
+# ADR-0001 - Feature-first Clean Architecture
 
 - **Status:** Accepted
 - **Date:** 2026-07-21

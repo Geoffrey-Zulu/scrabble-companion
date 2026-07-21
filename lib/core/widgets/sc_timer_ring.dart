@@ -40,7 +40,7 @@ class ScTimerRing extends StatelessWidget {
               strokeWidth: strokeWidth,
             ),
           ),
-          ?child,
+          if (child != null) child!,
         ],
       ),
     );

@@ -59,6 +59,7 @@ class _ScoreBody extends ConsumerWidget {
     if (result == null) {
       return;
     }
+    await ref.read(hapticsServiceProvider).medium();
     await ref
         .read(gameProvider.notifier)
         .addScore(
@@ -86,6 +87,7 @@ class _ScoreBody extends ConsumerWidget {
     if (result == null || turn.dbId == null) {
       return;
     }
+    await ref.read(hapticsServiceProvider).selection();
     await ref
         .read(gameProvider.notifier)
         .editTurn(
@@ -169,6 +171,7 @@ class _ScoreBody extends ConsumerWidget {
                         player: player,
                         isLeader: isLeader,
                         onAdd: () => _addFor(context, ref, player),
+                        ref: ref,
                       );
                     },
                   ),
@@ -204,7 +207,10 @@ class _ScoreBody extends ConsumerWidget {
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: () => _editTurn(context, ref, turn),
+                          onTap: () {
+                            ref.read(hapticsServiceProvider).selection();
+                            _editTurn(context, ref, turn);
+                          },
                           borderRadius: BorderRadius.circular(10),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -264,11 +270,13 @@ class _PlayerTile extends StatelessWidget {
     required this.player,
     required this.isLeader,
     required this.onAdd,
+    required this.ref,
   });
 
   final GamePlayer player;
   final bool isLeader;
   final VoidCallback onAdd;
+  final WidgetRef ref;
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +328,10 @@ class _PlayerTile extends StatelessWidget {
               color: colors.field,
               borderRadius: BorderRadius.circular(12),
               child: InkWell(
-                onTap: onAdd,
+                onTap: () {
+                  ref.read(hapticsServiceProvider).selection();
+                  onAdd();
+                },
                 borderRadius: BorderRadius.circular(12),
                 child: const SizedBox(
                   height: 36,
@@ -339,3 +350,4 @@ class _PlayerTile extends StatelessWidget {
     );
   }
 }
+

@@ -23,7 +23,7 @@ hotfix/* ──PR──► main ┴── merge back
 2. Commit in small, meaningful chunks.
 3. Open a PR into `develop`.
 4. Require: CI green (format, analyze, test), 1 review when collaborators exist.
-5. Squash or merge commit — prefer **squash** for features to keep `develop` readable.
+5. Squash or merge commit - prefer **squash** for features to keep `develop` readable.
 6. When releasing, PR `develop` → `main`, tag `vX.Y.Z`, update CHANGELOG.
 
 ## Commit messages

@@ -9,11 +9,17 @@ import '../../../core/settings/settings_notifier.dart';
 import '../../../core/widgets/sc_buttons.dart';
 import '../../../core/widgets/toast_controller.dart';
 import '../../rules/presentation/rules_sheet.dart';
+import 'privacy_policy_sheet.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   static final _whatsAppUri = Uri.parse('https://wa.me/260962572925');
+  static final _feedbackEmailUri = Uri(
+    scheme: 'mailto',
+    path: 'zulugeoffrey034@gmail.com',
+    queryParameters: {'subject': 'Scrabble Companion Feedback'},
+  );
 
   Future<void> _openWhatsApp(WidgetRef ref) async {
     await ref.read(hapticsServiceProvider).selection();
@@ -23,6 +29,17 @@ class SettingsScreen extends ConsumerWidget {
     );
     if (!opened) {
       ref.read(toastProvider.notifier).show('Couldn’t open WhatsApp');
+    }
+  }
+
+  Future<void> _sendFeedback(WidgetRef ref) async {
+    await ref.read(hapticsServiceProvider).selection();
+    final opened = await launchUrl(
+      _feedbackEmailUri,
+      mode: LaunchMode.externalApplication,
+    );
+    if (!opened) {
+      ref.read(toastProvider.notifier).show('Couldn’t open mail app');
     }
   }
 
@@ -123,19 +140,14 @@ class SettingsScreen extends ConsumerWidget {
                   title: 'Privacy Policy',
                   showChevron: true,
                   onTap: () {
-                    ref
-                        .read(toastProvider.notifier)
-                        .show('Privacy policy coming soon');
+                    ref.read(hapticsServiceProvider).selection();
+                    showPrivacyPolicySheet(context);
                   },
                 ),
                 _AboutLine(
                   title: 'Send Feedback',
                   showChevron: true,
-                  onTap: () {
-                    ref
-                        .read(toastProvider.notifier)
-                        .show('Feedback link coming soon');
-                  },
+                  onTap: () => _sendFeedback(ref),
                 ),
               ],
             ),
@@ -201,6 +213,7 @@ class SettingsScreen extends ConsumerWidget {
               label: 'Reset all settings',
               expanded: true,
               onPressed: () {
+                ref.read(hapticsServiceProvider).medium();
                 notifier.resetAll();
                 ref.read(toastProvider.notifier).show('Settings reset');
               },

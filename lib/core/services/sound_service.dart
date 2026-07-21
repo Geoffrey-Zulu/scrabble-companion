@@ -5,10 +5,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 
+import '../../core/settings/app_settings.dart';
+import '../../core/settings/settings_notifier.dart';
+
 final soundServiceProvider = Provider<SoundService>((ref) {
-  final service = JustAudioSoundService();
-  // Warm the player as soon as anything watches this provider (Timer screen).
-  service.warmUp();
+  final settings = ref.watch(settingsProvider);
+  if (settings.soundMode == TimerSoundMode.off) {
+    return SilentSoundService();
+  }
+
+  final service = JustAudioSoundService()..warmUp();
   ref.onDispose(service.dispose);
   return service;
 });
@@ -46,7 +52,7 @@ class JustAudioSoundService implements SoundService {
   var _generation = 0;
 
   @override
-  Future<void> warmUp() => _enqueue(() => _ensureReady());
+  Future<void> warmUp() => _enqueue(_ensureReady);
 
   Future<void> _ensureReady() async {
     if (_ready) {
@@ -77,7 +83,7 @@ class JustAudioSoundService implements SoundService {
   Future<void> playWarning() => _enqueuePlay();
 
   @override
-  Future<void> playExpiry() async {}
+  Future<void> playExpiry() => _enqueuePlay();
 
   @override
   Future<void> pausePlayback() async {

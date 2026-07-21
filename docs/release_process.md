@@ -4,9 +4,9 @@
 
 Semantic Versioning: `MAJOR.MINOR.PATCH`
 
-- **MAJOR** — breaking UX/data migrations users must notice
-- **MINOR** — features backward compatible
-- **PATCH** — fixes
+- **MAJOR** - breaking UX/data migrations users must notice
+- **MINOR** - features backward compatible
+- **PATCH** - fixes
 
 App version lives in `pubspec.yaml` (`version: X.Y.Z+BUILD`).
 

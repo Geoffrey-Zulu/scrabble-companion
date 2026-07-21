@@ -1,4 +1,4 @@
-# ADR-0002 — State management: Riverpod 3
+# ADR-0002 - State management: Riverpod 3
 
 - **Status:** Accepted
 - **Date:** 2026-07-21
@@ -26,4 +26,4 @@ Do not adopt flutter_hooks unless a concrete UI need appears.
 - Single tool for DI + state.
 - Easy provider overrides in tests.
 - Team must learn Riverpod codegen only if we later opt into `riverpod_annotation`
-  (optional — start without codegen to reduce build_runner surface).
+  (optional - start without codegen to reduce build_runner surface).

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/design.dart';
 import '../../../core/providers.dart';
+import '../../../core/services/haptics_service.dart';
 import '../../../core/settings/settings_notifier.dart';
 import '../../../core/widgets/sc_search_field.dart';
 import '../application/dictionary_controller.dart';
@@ -73,6 +74,7 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
                 onChanged: notifier.setQuery,
                 onSubmitted: (_) => notifier.check(),
                 onClear: () {
+                  ref.read(hapticsServiceProvider).selection();
                   notifier.clearQuery();
                   _controller.clear();
                 },

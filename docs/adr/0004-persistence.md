@@ -1,4 +1,4 @@
-# ADR-0004 — Persistence: Drift (SQLite)
+# ADR-0004 - Persistence: Drift (SQLite)
 
 - **Status:** Accepted
 - **Date:** 2026-07-21
@@ -29,4 +29,4 @@ Use **Drift ^2.34.x** as the system of record.
 
 - Clear migrations for schema evolution.
 - Excellent repository testing via in-memory SQLite.
-- Slightly more setup than Hive — acceptable trade for longevity.
+- Slightly more setup than Hive - acceptable trade for longevity.

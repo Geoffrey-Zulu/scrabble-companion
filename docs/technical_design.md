@@ -1,4 +1,4 @@
-# Technical Design Document — Scrabble Companion
+# Technical Design Document - Scrabble Companion
 
 **Version:** 0.1  
 **Date:** 2026-07-21  
@@ -15,9 +15,9 @@ a senior engineer can inherit years later without archaeological work.
 
 The app ships three pillars:
 
-1. **Turn timer** — precise, beautiful, haptic/sonic feedback  
-2. **Word checker** — tournament-grade validity + definitions, zero latency feel  
-3. **Score keeper** — multi-player games with history and stats  
+1. **Turn timer** - precise, beautiful, haptic/sonic feedback  
+2. **Word checker** - tournament-grade validity + definitions, zero latency feel  
+3. **Score keeper** - multi-player games with history and stats  
 
 All data and lookups work without a network connection.
 
@@ -161,7 +161,7 @@ See [ADR-0002](adr/0002-state-management.md).
 
 - `StatefulShellRoute.indexedStack` for Home / Timer / Dictionary / Settings
 - Imperative overlays for Score Keeper, New Game sheet, Win screen
-  (fullscreen routes or root navigator pages — prefer routes over ad-hoc
+  (fullscreen routes or root navigator pages - prefer routes over ad-hoc
   stacks so back button / Android predictive back work)
 
 See [ADR-0003](adr/0003-routing.md).
@@ -188,7 +188,7 @@ Tokens extracted from prototype CSS (`:root` / `[data-theme="dark"]`):
 | field | `#F1EFE8` | `#2A2723` |
 
 Typography: system / SF Pro on Apple; on Android use a high-quality sans
-(`google_fonts` with **Inter is avoided** per product design rules — prefer
+(`google_fonts` with **Inter is avoided** per product design rules - prefer
 something expressive but legible such as **Source Sans 3** or **IBM Plex Sans**
 if system fonts feel insufficient). Tabular numbers for timer and scores.
 
@@ -208,7 +208,7 @@ Full guidelines: [`ui_guidelines.md`](ui_guidelines.md).
 | Source | Verdict |
 | --- | --- |
 | [scrabblewords/scrabblewords](https://github.com/scrabblewords/scrabblewords) | **Selected.** English NA + British lists; `.txt` lines include definitions |
-| [kamilmielnik/scrabble-dictionaries](https://github.com/kamilmielnik/scrabble-dictionaries) | Clean word-only lists; no defs — useful backup, not primary |
+| [kamilmielnik/scrabble-dictionaries](https://github.com/kamilmielnik/scrabble-dictionaries) | Clean word-only lists; no defs - useful backup, not primary |
 | [fogleman/twl06](https://github.com/fogleman/twl06) | Excellent DAWG idea for memory; outdated TWL06; no defs |
 | [Ada-Developers-Academy/dictionary](https://github.com/Ada-Developers-Academy/dictionary) | General English, not tournament Scrabble |
 | [redbo/scrabble](https://github.com/redbo/scrabble) | Incomplete / project-specific |
@@ -238,7 +238,7 @@ AD an {advertisement=n} [n ADS]
 AAH an interjection expressing surprise [interj] / to exclaim in surprise [v -ED, -ING, -S]
 ```
 
-CSW first line is a `#` license comment — skip `#` lines.
+CSW first line is a `#` license comment - skip `#` lines.
 
 **ospd-defs.txt (supplemental):**
 
@@ -266,7 +266,7 @@ Lexicon
 **Loading strategy:**
 
 1. Prefer a **build-time** script that emits a compact asset
-   (gzipped JSON or messagepack of `{word, def, pos}`) — optional optimization.
+   (gzipped JSON or messagepack of `{word, def, pos}`) - optional optimization.
 2. v1 acceptable path: parse `.txt` once on first use of a locale, cache into
    Drift tables, subsequent launches read Drift (or keep HashSet warm in memory).
 
@@ -283,7 +283,7 @@ recently (LRU of one).
 | First locale load | < 2 s on mid-tier device; show non-blocking progress |
 
 Prefix search: group by first letter buckets or maintain sorted list + binary
-search range — avoid scanning 280k on every keystroke.
+search range - avoid scanning 280k on every keystroke.
 
 ---
 
@@ -296,13 +296,13 @@ Hive/Isar rejected for long-term maintenance risk (see ADR-0004).
 
 ### Entities (logical)
 
-- **Settings** — theme, textScale, warnAt, soundMode, volume, haptics, dictionaryLocale
-- **Game** — id, startedAt, endedAt, finished, durationMs
-- **Player** — gameId, name, seatIndex, finalScore
-- **Turn** — gameId, playerId, round, points, word?, createdAt
-- **FavoriteWord** — word, lexicon, createdAt
-- **RecentLookup** — word, valid, lookedUpAt
-- **Stats** — aggregates (gamesCount, winsByName, highestTurn, longestGameMs)
+- **Settings** - theme, textScale, warnAt, soundMode, volume, haptics, dictionaryLocale
+- **Game** - id, startedAt, endedAt, finished, durationMs
+- **Player** - gameId, name, seatIndex, finalScore
+- **Turn** - gameId, playerId, round, points, word?, createdAt
+- **FavoriteWord** - word, lexicon, createdAt
+- **RecentLookup** - word, valid, lookedUpAt
+- **Stats** - aggregates (gamesCount, winsByName, highestTurn, longestGameMs)
 
 ### Offline strategy
 
@@ -331,7 +331,7 @@ best-effort (clipboard / share sheet) without servers.
 - Warn window: accent ring + optional sound/haptics
 - Sound modes: **Off / A / B**; volume slider if OS allows meaningful control
 - Lifecycle: when app backgrounds, freeze remaining based on elapsed wall clock
-  or pause — **prefer pause on background** for fairness at the table (document
+  or pause - **prefer pause on background** for fairness at the table (document
   in Settings help text)
 - Integrate player names when `Game` active
 
@@ -387,16 +387,16 @@ CI: format + analyze + test on PR to `develop`.
 
 - Typed failures: `DictionaryLoadException`, `PersistenceException`
 - UI: toast for recoverable; inline empty/error for load failures
-- Never crash on bad dictionary lines — skip + log count in debug
+- Never crash on bad dictionary lines - skip + log count in debug
 
 ---
 
 ## 14. Performance considerations
 
-- Avoid rebuilding shell on timer tick — narrow `ref.watch` selects
+- Avoid rebuilding shell on timer tick - narrow `ref.watch` selects
 - Dictionary load on isolate (`compute` / `Isolate.run`) if parse > 300 ms
 - Compress assets with gzip if raw text bloats IPA/APK
-- Impeller default on modern Flutter — avoid unnecessary saveLayers
+- Impeller default on modern Flutter - avoid unnecessary saveLayers
 
 ---
 

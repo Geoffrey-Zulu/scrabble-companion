@@ -11,6 +11,6 @@ Introducing Melos now would add:
 - cognitive overhead for a solo-friendly / small-team codebase
 
 If we later extract e.g. `packages/scrabble_lexicon`, add Melos (or an equivalent
-workspace) in the same PR that creates the second package — not before.
+workspace) in the same PR that creates the second package - not before.
 
 See ADR-0001.

@@ -28,7 +28,7 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Future<void> _openNewGame(BuildContext context, WidgetRef ref) async {
-    ref.read(hapticsServiceProvider).selection();
+    ref.read(hapticsServiceProvider).medium();
     final started = await showNewGameSheet(context, ref);
     if (started && context.mounted) {
       context.go('/game');

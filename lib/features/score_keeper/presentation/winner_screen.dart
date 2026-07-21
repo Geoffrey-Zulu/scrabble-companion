@@ -53,6 +53,7 @@ class _WinnerScreenState extends ConsumerState<WinnerScreen>
   }
 
   Future<void> _newGame() async {
+    await ref.read(hapticsServiceProvider).medium();
     await ref.read(gameProvider.notifier).clearActiveFromMemory();
     if (!mounted) {
       return;

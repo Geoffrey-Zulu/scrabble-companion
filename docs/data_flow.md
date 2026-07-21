@@ -54,15 +54,19 @@ toggle
   → Stopwatch start/stop
   → UI ticker watches remainingDuration
 
-remaining ≤ warnAt && running
-  → SoundService.playWarning (mode A/B)
-  → HapticsService.warn
+remaining ≤ warnAt (first crossing only)
+  → SoundService.playWarning once (mode A/B; no loop for full threshold)
+  → HapticsService.medium
+  → per-second selection haptics while still in warn window
 
 remaining == 0
   → state = expired
-  → SoundService.playExpiry
+  → SoundService.playExpiry (reuses same clip; stops prior play)
   → HapticsService.heavy
-```
+
+Sound policy: assets are ~11–13s stings, not continuous alarms. A flexible
+warnAt (5–30s) still triggers a single entry chime + expiry chime; urgency
+between those is carried by ring color + haptics.```
 
 Player switch (game active):
 

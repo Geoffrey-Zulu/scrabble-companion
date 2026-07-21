@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/content/scrabble_rules.dart';
+import '../../../core/content/privacy_policy.dart';
 import '../../../core/design/design.dart';
 import '../../../core/services/haptics_service.dart';
 import '../../../core/widgets/sc_bottom_sheet.dart';
 
-/// Opens a scrollable, styled rules sheet.
-Future<void> showScrabbleRulesSheet(BuildContext context) {
+/// Opens a scrollable, styled privacy policy sheet.
+Future<void> showPrivacyPolicySheet(BuildContext context) {
   return showScBottomSheet<void>(
     context: context,
-    builder: (context) => const ScrabbleRulesSheet(),
+    builder: (context) => const PrivacyPolicySheet(),
   );
 }
 
-class ScrabbleRulesSheet extends ConsumerWidget {
-  const ScrabbleRulesSheet({super.key});
+class PrivacyPolicySheet extends ConsumerWidget {
+  const PrivacyPolicySheet({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,10 +36,10 @@ class ScrabbleRulesSheet extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(ScrabbleRules.title, style: textTheme.headlineSmall),
+                      Text(PrivacyPolicy.title, style: textTheme.headlineSmall),
                       const SizedBox(height: 4),
                       Text(
-                        ScrabbleRules.subtitle,
+                        PrivacyPolicy.subtitle,
                         style: textTheme.bodySmall?.copyWith(
                           color: colors.faint,
                         ),
@@ -61,10 +61,10 @@ class ScrabbleRulesSheet extends ConsumerWidget {
             Expanded(
               child: ListView.separated(
                 padding: const EdgeInsets.only(bottom: 28),
-                itemCount: ScrabbleRules.sections.length,
+                itemCount: PrivacyPolicy.sections.length,
                 separatorBuilder: (_, _) => const SizedBox(height: 14),
                 itemBuilder: (context, index) {
-                  final section = ScrabbleRules.sections[index];
+                  final section = PrivacyPolicy.sections[index];
                   return DecoratedBox(
                     decoration: BoxDecoration(
                       color: colors.field,

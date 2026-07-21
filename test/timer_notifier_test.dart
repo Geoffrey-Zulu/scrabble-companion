@@ -32,12 +32,10 @@ void main() {
   test('setDuration snaps to nearest preset', () {
     final container = makeContainer();
     addTearDown(container.dispose);
-    final notifier = container.read(timerProvider.notifier);
-
-    notifier.setDuration(50);
+    container.read(timerProvider.notifier).setDuration(50);
     expect(container.read(timerProvider).durationSeconds, 60);
 
-    notifier.setDuration(100);
+    container.read(timerProvider.notifier).setDuration(100);
     expect(container.read(timerProvider).durationSeconds, 90);
   });
 
@@ -78,7 +76,7 @@ void main() {
     );
     expect(state.isInWarning(TimerNotifier.warnAtSeconds), isTrue);
     expect(
-      TurnTimerState(
+      const TurnTimerState(
         remainingMs: 11 * 1000,
         phase: TimerPhase.running,
       ).isInWarning(TimerNotifier.warnAtSeconds),

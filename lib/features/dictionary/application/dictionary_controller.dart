@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers.dart';
+import '../../../core/services/haptics_service.dart';
 import '../../../core/settings/settings_notifier.dart';
 import '../../../data/dictionary/lexicon.dart';
 
@@ -138,6 +139,12 @@ class DictionaryController extends Notifier<DictionaryUiState> {
       partOfSpeech: entry?.partOfSpeech ?? '',
     );
 
+    if (valid) {
+      unawaited(ref.read(hapticsServiceProvider).light());
+    } else {
+      unawaited(ref.read(hapticsServiceProvider).medium());
+    }
+
     await ref
         .read(lookupHistoryRepositoryProvider)
         .record(word: target, valid: valid);
@@ -158,6 +165,7 @@ class DictionaryController extends Notifier<DictionaryUiState> {
     if (word == null) {
       return;
     }
+    unawaited(ref.read(hapticsServiceProvider).selection());
     final locale = ref.read(settingsProvider).dictionaryLocale.name;
     await ref
         .read(favoritesRepositoryProvider)

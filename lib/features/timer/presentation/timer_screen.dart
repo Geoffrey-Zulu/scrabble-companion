@@ -8,8 +8,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/design/design.dart';
 import '../../../core/services/haptics_service.dart';
 import '../../../core/services/sound_service.dart';
+import '../../../core/settings/settings_notifier.dart';
 import '../../../core/widgets/sc_buttons.dart';
 import '../../../core/widgets/sc_timer_ring.dart';
+import '../../score_keeper/application/game_notifier.dart';
 import '../application/timer_notifier.dart';
 
 class TimerScreen extends ConsumerStatefulWidget {
@@ -49,12 +51,18 @@ class _TimerScreenState extends ConsumerState<TimerScreen>
     final textTheme = Theme.of(context).textTheme;
     final timer = ref.watch(timerProvider);
     final notifier = ref.read(timerProvider.notifier);
-    const warnAt = TimerNotifier.warnAtSeconds;
-    final inWarn = timer.isInWarning(warnAt);
+    final settings = ref.watch(settingsProvider);
+    final game = ref.watch(gameProvider).value;
+    final players = game?.players ?? [];
+    final currentPlayerName = (timer.playerIndex < players.length)
+        ? players[timer.playerIndex].name
+        : 'Player ${timer.playerIndex + 1}';
+
+    final inWarn = timer.isInWarning(settings.warnAtSeconds);
     final ringColor = timer.isExpired || inWarn
-        ? colors.accent
+        ? colors.invalid
         : (timer.isRunning ? colors.accent : colors.ink);
-    final timeColor = timer.isExpired || inWarn ? colors.accent : colors.ink;
+    final timeColor = timer.isExpired || inWarn ? colors.invalid : colors.ink;
     final pickerEnabled = !timer.isRunning;
 
     return Scaffold(
@@ -64,9 +72,9 @@ class _TimerScreenState extends ConsumerState<TimerScreen>
         child: LayoutBuilder(
           builder: (context, constraints) {
             final ringSize = math.min(
-              280.0,
-              math.max(180.0, constraints.maxHeight * 0.34),
-            );
+              280,
+              math.max(180, constraints.maxHeight * 0.34),
+            ).toDouble();
 
             return SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
@@ -80,6 +88,15 @@ class _TimerScreenState extends ConsumerState<TimerScreen>
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 child: Column(
                   children: [
+                    Text(
+                      currentPlayerName.toUpperCase(),
+                      style: textTheme.labelMedium?.copyWith(
+                        color: colors.muted,
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
                     Text('Turn Timer', style: textTheme.headlineSmall),
                     SizedBox(
                       height: math.max(16, constraints.maxHeight * 0.035),
@@ -138,6 +155,20 @@ class _TimerScreenState extends ConsumerState<TimerScreen>
                             unawaited(notifier.toggle());
                           },
                         ),
+                        if (players.length > 1) ...[
+                          const SizedBox(width: 16),
+                          ScIconButton(
+                            icon: Icons.skip_next_rounded,
+                            semanticLabel: 'Next turn',
+                            onPressed: () {
+                              unawaited(
+                                notifier.switchPlayer(
+                                  playerCount: players.length,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ],
                     ),
                     const SizedBox(height: 36),
@@ -284,7 +315,7 @@ class _DurationWheelState extends State<_DurationWheel> {
               if (_suppressNotify) {
                 return;
               }
-              final presets = TimerNotifier.durations;
+              const presets = TimerNotifier.durations;
               final seconds = presets[_normalizeIndex(index)];
               if (seconds == widget.durationSeconds) {
                 return;
