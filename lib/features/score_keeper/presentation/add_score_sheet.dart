@@ -12,26 +12,56 @@ Future<({int points, String? word})?> showAddScoreSheet({
   required BuildContext context,
   required GamePlayer player,
   required int round,
+  int? initialPoints,
+  String? initialWord,
+  String submitLabel = 'Add Score',
+  String? titleOverride,
 }) {
   return showScBottomSheet(
     context: context,
-    builder: (context) => _AddScoreSheet(player: player, round: round),
+    builder: (context) => _AddScoreSheet(
+      player: player,
+      round: round,
+      initialPoints: initialPoints,
+      initialWord: initialWord,
+      submitLabel: submitLabel,
+      titleOverride: titleOverride,
+    ),
   );
 }
 
 class _AddScoreSheet extends ConsumerStatefulWidget {
-  const _AddScoreSheet({required this.player, required this.round});
+  const _AddScoreSheet({
+    required this.player,
+    required this.round,
+    required this.submitLabel,
+    this.initialPoints,
+    this.initialWord,
+    this.titleOverride,
+  });
 
   final GamePlayer player;
   final int round;
+  final int? initialPoints;
+  final String? initialWord;
+  final String submitLabel;
+  final String? titleOverride;
 
   @override
   ConsumerState<_AddScoreSheet> createState() => _AddScoreSheetState();
 }
 
 class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
-  String _digits = '';
-  final _word = TextEditingController();
+  late String _digits;
+  late final TextEditingController _word;
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = widget.initialPoints;
+    _digits = (initial == null || initial == 0) ? '' : '$initial';
+    _word = TextEditingController(text: widget.initialWord ?? '');
+  }
 
   @override
   void dispose() {
@@ -46,7 +76,12 @@ class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
     return int.tryParse(_digits) ?? 0;
   }
 
+  void _dismissKeyboard() {
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+
   void _tapKey(String key) {
+    _dismissKeyboard();
     ref.read(hapticsServiceProvider).selection();
     setState(() {
       if (key == 'del') {
@@ -75,6 +110,7 @@ class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
   }
 
   void _submit() {
+    _dismissKeyboard();
     ref.read(hapticsServiceProvider).medium();
     final word = _word.text.trim().toUpperCase();
     Navigator.of(context).pop((
@@ -87,54 +123,67 @@ class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
+    final title = widget.titleOverride ?? "${widget.player.name}'s turn";
 
     return ScBottomSheetBody(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            "${widget.player.name}'s turn",
-            style: textTheme.headlineSmall,
-          ),
+          Text(title, style: textTheme.headlineSmall),
           Text(
             'Round ${widget.round}',
             style: textTheme.bodySmall?.copyWith(color: colors.muted),
           ),
-          const SizedBox(height: 12),
-          Text(
-            '$_points',
-            textAlign: TextAlign.center,
-            style: textTheme.displayMedium?.copyWith(
-              fontSize: 60,
-              fontWeight: FontWeight.w300,
-              fontFeatures: const [FontFeature.tabularFigures()],
-            ),
-          ),
           const SizedBox(height: 8),
-          TextField(
-            controller: _word,
-            textCapitalization: TextCapitalization.characters,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
-              LengthLimitingTextInputFormatter(15),
-              _UpperCaseFormatter(),
-            ],
-            decoration: InputDecoration(
-              hintText: 'Optional word',
-              filled: true,
-              fillColor: colors.field,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide.none,
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: _dismissKeyboard,
+              child: SingleChildScrollView(
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      '$_points',
+                      textAlign: TextAlign.center,
+                      style: textTheme.displayMedium?.copyWith(
+                        fontSize: 56,
+                        fontWeight: FontWeight.w300,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _word,
+                      textCapitalization: TextCapitalization.characters,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+                        LengthLimitingTextInputFormatter(15),
+                        _UpperCaseFormatter(),
+                      ],
+                      decoration: InputDecoration(
+                        hintText: 'Optional word',
+                        filled: true,
+                        fillColor: colors.field,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    _Keypad(onKey: _tapKey),
+                    const SizedBox(height: 8),
+                  ],
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 14),
-          _Keypad(onKey: _tapKey),
-          const SizedBox(height: 16),
           ScPrimaryButton(
-            label: 'Add Score',
+            label: widget.submitLabel,
             expanded: true,
             onPressed: _submit,
           ),
@@ -169,7 +218,7 @@ class _Keypad extends StatelessWidget {
     ];
     return Column(
       children: [
-        for (final row in keys) ...[
+        for (final row in keys)
           Row(
             children: [
               for (final key in row)
@@ -181,7 +230,6 @@ class _Keypad extends StatelessWidget {
                 ),
             ],
           ),
-        ],
       ],
     );
   }

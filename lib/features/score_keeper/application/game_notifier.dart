@@ -75,13 +75,34 @@ class GameNotifier extends AsyncNotifier<ActiveGame?> {
     state = AsyncData(game);
   }
 
+  Future<void> editTurn({
+    required int turnId,
+    required int points,
+    String? word,
+  }) async {
+    final current = state.value;
+    if (current == null || current.finished) {
+      return;
+    }
+    final cleaned = word?.trim().toUpperCase();
+    final game = await _repo.updateTurn(
+      gameId: current.id,
+      turnId: turnId,
+      points: points.clamp(0, 999),
+      word: (cleaned == null || cleaned.isEmpty) ? null : cleaned,
+    );
+    state = AsyncData(game);
+  }
+
   Future<ActiveGame?> endGame() async {
     final current = state.value;
     if (current == null) {
       return null;
     }
     final game = await _repo.endGame(current.id);
-    state = const AsyncData(null);
+    // Keep the finished game in memory so ScoreScreen doesn't race-redirect
+    // home while we navigate to the winner page.
+    state = AsyncData(game);
     ref.invalidate(recentGamesProvider);
     return game;
   }

@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:scrabble_companion/app/app.dart';
-import 'package:scrabble_companion/core/services/haptics_service.dart';
-import 'package:scrabble_companion/core/services/sound_service.dart';
 import 'package:scrabble_companion/core/widgets/sc_bottom_nav.dart';
 
 import '../support/pump_app.dart';

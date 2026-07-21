@@ -16,25 +16,44 @@ Future<T?> showScBottomSheet<T>({
     barrierColor: Colors.black.withValues(alpha: 0.35),
     shape: const RoundedRectangleBorder(borderRadius: AppRadii.sheetBorder),
     builder: (context) {
-      return Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 18),
-            Container(
-              width: 38,
-              height: 5,
-              decoration: BoxDecoration(
-                color: colors.line,
-                borderRadius: BorderRadius.circular(3),
+      final maxHeight = MediaQuery.sizeOf(context).height * 0.92;
+      final keyboard = MediaQuery.viewInsetsOf(context).bottom;
+      final keyboardOpen = keyboard > 0;
+
+      // With the keyboard up, barrier / back first collapses focus instead of
+      // dismissing the sheet mid-entry.
+      return PopScope(
+        canPop: !keyboardOpen,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
+        },
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: keyboard),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: maxHeight - keyboard),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 18),
+                  Container(
+                    width: 38,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: colors.line,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Flexible(child: builder(context)),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            Flexible(child: builder(context)),
-          ],
+          ),
         ),
       );
     },

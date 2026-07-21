@@ -112,6 +112,41 @@ class GameRepository {
     return (await loadById(gameId))!;
   }
 
+  Future<ActiveGame> updateTurn({
+    required String gameId,
+    required int turnId,
+    required int points,
+    String? word,
+  }) async {
+    final game = await loadById(gameId);
+    if (game == null || game.finished) {
+      throw StateError('No active game');
+    }
+    final turn = game.history.firstWhere(
+      (t) => t.dbId == turnId,
+      orElse: () => throw StateError('Turn not found'),
+    );
+    final player = game.players.firstWhere((p) => p.seatIndex == turn.playerSeat);
+    final playerId = player.dbId!;
+    final nextPoints = points.clamp(0, 999);
+    final delta = nextPoints - turn.points;
+    final cleaned = word?.trim().toUpperCase();
+    await _db.transaction(() async {
+      await (_db.update(_db.turns)..where((t) => t.id.equals(turnId))).write(
+        TurnsCompanion(
+          points: Value(nextPoints),
+          word: Value((cleaned == null || cleaned.isEmpty) ? null : cleaned),
+        ),
+      );
+      await (_db.update(_db.players)..where((p) => p.id.equals(playerId))).write(
+        PlayersCompanion(
+          finalScore: Value((player.score + delta).clamp(0, 999999)),
+        ),
+      );
+    });
+    return (await loadById(gameId))!;
+  }
+
   Future<ActiveGame> endGame(String gameId) async {
     final game = await loadById(gameId);
     if (game == null) {

@@ -121,36 +121,36 @@ Last updated: **2026-07-21**
 - [x] Round derivation from turn index
 - [x] Undo last turn
 - [x] End Game → winner + stats (highest turn, avg, rounds, duration)
-- [ ] Confetti / letter-tile fall animation (respect reduce motion)
+- [-] Soft letter-tile confetti on winner - removed (tiles froze on screen)
 - [x] Persist finished games to recent list (cap 12)
 - [x] Swipe-to-delete recent games
 - [x] Resume in-progress game after restart
-- [ ] Edit previous round scores (discovered need - implement after undo)
-- [ ] Aggregate statistics store (wins, longest game, highest word)
-- [ ] Integration tests for full game lifecycle
+- [x] Edit previous round scores (tap history row → edit sheet)
+- [-] Aggregate / career statistics store - cancelled for v1 (keep simple)
+- [x] Repository lifecycle tests (add / edit / undo / end → recent)
 
 ---
 
 ## Milestone 7 - Home & navigation polish
 
-- [ ] Greeting by time of day
-- [ ] Timer / Dictionary / Score Keeper cards
-- [ ] Start New Game CTA
-- [ ] Recent games list + empty state
+- [x] Greeting by time of day
+- [x] Timer / Dictionary / Score Keeper cards
+- [x] Start New Game CTA
+- [x] Recent games list + empty state
 - [ ] Deep link / route restoration for overlays
-- [ ] Motion: `fadeIn`, card press scale, sheet spring
+- [x] Motion: fade-up for score / winner overlays
 
 ---
 
 ## Milestone 8 - Settings
 
-- [ ] Gameplay: warn-at, timer sound (Off/A/B), volume, haptics
-- [ ] Dictionary: NWL vs CSW
-- [ ] Appearance: theme, text size
-- [ ] About: version, privacy, feedback
-- [ ] Developer card (Geoffrey Zulu contact links from design)
-- [ ] Reset all settings
-- [ ] Persist all settings via repository
+- [x] Gameplay: haptics (warn-at / A-B sound simplified to fixed 10s + sound1)
+- [x] Dictionary: NWL vs CSW
+- [x] Appearance: theme, text size
+- [x] About: version, privacy, feedback (stubs), Scrabble rules
+- [x] Developer card (WhatsApp contact)
+- [x] Reset all settings
+- [x] Persist all settings via repository
 
 ---
 
@@ -160,9 +160,9 @@ Last updated: **2026-07-21**
 - [ ] Button press feedback
 - [ ] Swipe-delete animation
 - [ ] Timer ring + danger pulse
-- [ ] Win confetti (disable when `disableAnimations` / reduced motion)
-- [ ] Central `HapticsService` gated by setting
-- [ ] Central `SoundService` with A/B assets + volume
+- [-] Win confetti - removed (tiles froze on screen)
+- [x] Central `HapticsService` gated by setting
+- [x] Central `SoundService` (`sound1.mp3`; A/B simplified away)
 
 ---
 
@@ -223,7 +223,7 @@ Last updated: **2026-07-21**
 ## Discovered / parked
 
 - [ ] Landscape timer layout (v1.1)
-- [ ] Edit arbitrary historical turns (not just undo)
+- [x] Edit arbitrary historical turns (not just undo)
 - [ ] Share word / game summary via system share sheet
 - [ ] Export game as CSV / image
 - [ ] Anagram / rack helper (future_ideas)

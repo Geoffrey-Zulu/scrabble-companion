@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:scrabble_companion/features/score_keeper/application/game_notifier.dart';
 import 'package:scrabble_companion/features/score_keeper/domain/game_models.dart';
 import 'package:scrabble_companion/features/score_keeper/presentation/new_game_sheet.dart';
 

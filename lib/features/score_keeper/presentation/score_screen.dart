@@ -27,12 +27,16 @@ class ScoreScreen extends ConsumerWidget {
         body: Center(child: Text('Could not load game.\n$error')),
       ),
       data: (game) {
-        if (game == null || game.finished) {
+        if (game == null) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (context.mounted) {
               context.go('/home');
             }
           });
+          return Scaffold(backgroundColor: colors.bg);
+        }
+        // Finished games are handed off to /game/winner — hold a quiet frame.
+        if (game.finished) {
           return Scaffold(backgroundColor: colors.bg);
         }
         return _ScoreBody(game: game);
@@ -59,6 +63,33 @@ class _ScoreBody extends ConsumerWidget {
         .read(gameProvider.notifier)
         .addScore(
           playerSeat: p.seatIndex,
+          points: result.points,
+          word: result.word,
+        );
+  }
+
+  Future<void> _editTurn(
+    BuildContext context,
+    WidgetRef ref,
+    GameTurn turn,
+  ) async {
+    final player = game.players.firstWhere((p) => p.seatIndex == turn.playerSeat);
+    final result = await showAddScoreSheet(
+      context: context,
+      player: player,
+      round: turn.round,
+      initialPoints: turn.points,
+      initialWord: turn.word,
+      submitLabel: 'Save',
+      titleOverride: 'Edit ${turn.playerName}',
+    );
+    if (result == null || turn.dbId == null) {
+      return;
+    }
+    await ref
+        .read(gameProvider.notifier)
+        .editTurn(
+          turnId: turn.dbId!,
           points: result.points,
           word: result.word,
         );
@@ -146,7 +177,18 @@ class _ScoreBody extends ConsumerWidget {
                     'ROUND HISTORY',
                     style: textTheme.labelMedium?.copyWith(color: colors.faint),
                   ),
-                  const SizedBox(height: 8),
+                  if (game.history.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4, bottom: 4),
+                      child: Text(
+                        'Tap a turn to edit',
+                        style: textTheme.bodySmall?.copyWith(
+                          color: colors.faint,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 4),
                   if (game.history.isEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -159,34 +201,44 @@ class _ScoreBody extends ConsumerWidget {
                     )
                   else
                     for (final turn in game.history.reversed)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          children: [
-                            Text(
-                              'R${turn.round}',
-                              style: textTheme.bodySmall?.copyWith(
-                                color: colors.faint,
-                              ),
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => _editTurn(context, ref, turn),
+                          borderRadius: BorderRadius.circular(10),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 4,
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                turn.word == null || turn.word!.isEmpty
-                                    ? turn.playerName
-                                    : '${turn.playerName} · ${turn.word}',
-                                style: textTheme.bodyMedium,
-                              ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'R${turn.round}',
+                                  style: textTheme.bodySmall?.copyWith(
+                                    color: colors.faint,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    turn.word == null || turn.word!.isEmpty
+                                        ? turn.playerName
+                                        : '${turn.playerName} · ${turn.word}',
+                                    style: textTheme.bodyMedium,
+                                  ),
+                                ),
+                                Text(
+                                  '+${turn.points}',
+                                  style: textTheme.titleMedium?.copyWith(
+                                    fontFeatures: const [
+                                      FontFeature.tabularFigures(),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              '+${turn.points}',
-                              style: textTheme.titleMedium?.copyWith(
-                                fontFeatures: const [
-                                  FontFeature.tabularFigures(),
-                                ],
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                 ],

@@ -5,20 +5,73 @@ import 'package:go_router/go_router.dart';
 import '../../../core/design/design.dart';
 import '../../../core/services/haptics_service.dart';
 import '../../../core/widgets/sc_buttons.dart';
+import '../application/game_notifier.dart';
 import '../domain/game_models.dart';
 import 'new_game_sheet.dart';
 
-class WinnerScreen extends ConsumerWidget {
+class WinnerScreen extends ConsumerStatefulWidget {
   const WinnerScreen({required this.game, super.key});
 
   final ActiveGame game;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WinnerScreen> createState() => _WinnerScreenState();
+}
+
+class _WinnerScreenState extends ConsumerState<WinnerScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _enter;
+
+  @override
+  void initState() {
+    super.initState();
+    _enter = AnimationController(vsync: this, duration: AppMotion.pop);
+    final reduce = WidgetsBinding
+        .instance
+        .platformDispatcher
+        .accessibilityFeatures
+        .disableAnimations;
+    if (reduce) {
+      _enter.value = 1;
+    } else {
+      _enter.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _enter.dispose();
+    super.dispose();
+  }
+
+  Future<void> _done() async {
+    await ref.read(hapticsServiceProvider).selection();
+    await ref.read(gameProvider.notifier).clearActiveFromMemory();
+    if (mounted) {
+      context.go('/home');
+    }
+  }
+
+  Future<void> _newGame() async {
+    await ref.read(gameProvider.notifier).clearActiveFromMemory();
+    if (!mounted) {
+      return;
+    }
+    final started = await showNewGameSheet(context, ref);
+    if (started && mounted) {
+      context.go('/game');
+    } else if (mounted) {
+      context.go('/home');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
-    final winner = game.winner;
-    final stats = GameStats.fromGame(game);
+    final winner = widget.game.winner;
+    final stats = GameStats.fromGame(widget.game);
+    final curved = CurvedAnimation(parent: _enter, curve: AppMotion.emphasized);
 
     return Scaffold(
       backgroundColor: colors.bg,
@@ -28,55 +81,100 @@ class WinnerScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Winner',
-                style: textTheme.labelMedium?.copyWith(color: colors.faint),
+              Expanded(
+                child: ListView(
+                  children: [
+                    const SizedBox(height: 36),
+                    FadeTransition(
+                      opacity: curved,
+                      child: ScaleTransition(
+                        scale: Tween<double>(begin: 0.94, end: 1).animate(
+                          curved,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              'WINNER',
+                              style: textTheme.labelMedium?.copyWith(
+                                color: colors.accent,
+                                letterSpacing: 0.1 * 12,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              winner.name,
+                              textAlign: TextAlign.center,
+                              style: textTheme.displaySmall,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${winner.score} points',
+                              style: textTheme.titleLarge?.copyWith(
+                                color: colors.muted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    Text(
+                      'GAME STATS',
+                      style: textTheme.labelMedium?.copyWith(
+                        color: colors.faint,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    FadeTransition(
+                      opacity: curved,
+                      child: SlideTransition(
+                        position: Tween<Offset>(
+                          begin: const Offset(0, 0.06),
+                          end: Offset.zero,
+                        ).animate(curved),
+                        child: Wrap(
+                          spacing: 12,
+                          runSpacing: 12,
+                          children: [
+                            _StatCard(
+                              label: 'Highest turn',
+                              value: '${stats.highestTurn}',
+                            ),
+                            _StatCard(
+                              label: 'Average turn',
+                              value: stats.averageTurn.toStringAsFixed(0),
+                            ),
+                            _StatCard(
+                              label: 'Total rounds',
+                              value: '${stats.totalRounds}',
+                            ),
+                            _StatCard(
+                              label: 'Duration',
+                              value: stats.durationLabel,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 8),
-              Text(winner.name, style: textTheme.displaySmall),
-              Text(
-                '${winner.score} points',
-                style: textTheme.titleLarge?.copyWith(color: colors.muted),
-              ),
-              const SizedBox(height: 28),
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
+              Row(
                 children: [
-                  _StatCard(
-                    label: 'Highest turn',
-                    value: '${stats.highestTurn}',
+                  Expanded(
+                    child: ScSecondaryButton(
+                      label: 'Done',
+                      onPressed: _done,
+                    ),
                   ),
-                  _StatCard(
-                    label: 'Average turn',
-                    value: stats.averageTurn.toStringAsFixed(0),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: ScPrimaryButton(
+                      label: 'New Game',
+                      onPressed: _newGame,
+                    ),
                   ),
-                  _StatCard(
-                    label: 'Total rounds',
-                    value: '${stats.totalRounds}',
-                  ),
-                  _StatCard(label: 'Duration', value: stats.durationLabel),
                 ],
-              ),
-              const Spacer(),
-              ScPrimaryButton(
-                label: 'Done',
-                expanded: true,
-                onPressed: () {
-                  ref.read(hapticsServiceProvider).selection();
-                  context.go('/home');
-                },
-              ),
-              const SizedBox(height: 12),
-              ScSecondaryButton(
-                label: 'New Game',
-                expanded: true,
-                onPressed: () async {
-                  final started = await showNewGameSheet(context, ref);
-                  if (started && context.mounted) {
-                    context.go('/game');
-                  }
-                },
               ),
             ],
           ),

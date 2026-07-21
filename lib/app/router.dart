@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/design/design.dart';
 import '../core/services/haptics_service.dart';
 import '../core/widgets/sc_bottom_nav.dart';
 import '../core/widgets/sc_toast.dart';
@@ -16,6 +17,35 @@ import '../features/timer/presentation/timer_screen.dart';
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
 );
+
+CustomTransitionPage<void> _fadeUpPage({
+  required LocalKey key,
+  required Widget child,
+  Duration duration = AppMotion.fadeIn,
+}) {
+  return CustomTransitionPage<void>(
+    key: key,
+    child: child,
+    transitionDuration: duration,
+    reverseTransitionDuration: AppMotion.fadeIn,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: AppMotion.emphasized,
+      );
+      return FadeTransition(
+        opacity: curved,
+        child: SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 0.035),
+            end: Offset.zero,
+          ).animate(curved),
+          child: child,
+        ),
+      );
+    },
+  );
+}
 
 GoRouter createAppRouter({String initialLocation = '/home'}) {
   return GoRouter(
@@ -69,18 +99,25 @@ GoRouter createAppRouter({String initialLocation = '/home'}) {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/game',
         name: 'game',
-        builder: (context, state) => const ScoreScreen(),
+        pageBuilder: (context, state) => _fadeUpPage(
+          key: state.pageKey,
+          child: const ScoreScreen(),
+        ),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,
         path: '/game/winner',
         name: 'game-winner',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final game = state.extra;
-          if (game is! ActiveGame) {
-            return const ScoreScreen();
-          }
-          return WinnerScreen(game: game);
+          final child = game is ActiveGame
+              ? WinnerScreen(game: game)
+              : const ScoreScreen();
+          return _fadeUpPage(
+            key: state.pageKey,
+            child: child,
+            duration: AppMotion.pop,
+          );
         },
       ),
     ],

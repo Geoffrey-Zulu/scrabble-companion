@@ -66,21 +66,25 @@ class _ScrabbleAppState extends ConsumerState<ScrabbleApp> {
 
         return MediaQuery(
           data: scaled,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              child ?? const SizedBox.shrink(),
-              if (_showSplash)
-                Positioned.fill(
-                  child: SplashScreen(
-                    onFinished: () {
-                      if (mounted) {
-                        setState(() => _showSplash = false);
-                      }
-                    },
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                child ?? const SizedBox.shrink(),
+                if (_showSplash)
+                  Positioned.fill(
+                    child: SplashScreen(
+                      onFinished: () {
+                        if (mounted) {
+                          setState(() => _showSplash = false);
+                        }
+                      },
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         );
       },
