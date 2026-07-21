@@ -12,11 +12,12 @@ class GameRepository {
   static const recentCap = 12;
 
   Future<ActiveGame?> loadActive() async {
-    final row = await (_db.select(_db.games)
-          ..where((g) => g.finished.equals(false))
-          ..orderBy([(g) => OrderingTerm.desc(g.startedAt)])
-          ..limit(1))
-        .getSingleOrNull();
+    final row =
+        await (_db.select(_db.games)
+              ..where((g) => g.finished.equals(false))
+              ..orderBy([(g) => OrderingTerm.desc(g.startedAt)])
+              ..limit(1))
+            .getSingleOrNull();
     if (row == null) {
       return null;
     }
@@ -29,18 +30,12 @@ class GameRepository {
     await _db.transaction(() async {
       await _db
           .into(_db.games)
-          .insert(
-            GamesCompanion.insert(id: id, startedAt: started),
-          );
+          .insert(GamesCompanion.insert(id: id, startedAt: started));
       for (var i = 0; i < names.length; i++) {
         await _db
             .into(_db.players)
             .insert(
-              PlayersCompanion.insert(
-                gameId: id,
-                name: names[i],
-                seatIndex: i,
-              ),
+              PlayersCompanion.insert(gameId: id, name: names[i], seatIndex: i),
             );
       }
     });
@@ -98,12 +93,16 @@ class GameRepository {
       throw StateError('Nothing to undo');
     }
     final last = game.history.last;
-    final player = game.players.firstWhere((p) => p.seatIndex == last.playerSeat);
+    final player = game.players.firstWhere(
+      (p) => p.seatIndex == last.playerSeat,
+    );
     final playerId = player.dbId!;
     final turnId = last.dbId!;
     await _db.transaction(() async {
       await (_db.delete(_db.turns)..where((t) => t.id.equals(turnId))).go();
-      await (_db.update(_db.players)..where((p) => p.id.equals(playerId))).write(
+      await (_db.update(
+        _db.players,
+      )..where((p) => p.id.equals(playerId))).write(
         PlayersCompanion(
           finalScore: Value((player.score - last.points).clamp(0, 999999)),
         ),
@@ -126,7 +125,9 @@ class GameRepository {
       (t) => t.dbId == turnId,
       orElse: () => throw StateError('Turn not found'),
     );
-    final player = game.players.firstWhere((p) => p.seatIndex == turn.playerSeat);
+    final player = game.players.firstWhere(
+      (p) => p.seatIndex == turn.playerSeat,
+    );
     final playerId = player.dbId!;
     final nextPoints = points.clamp(0, 999);
     final delta = nextPoints - turn.points;
@@ -138,7 +139,9 @@ class GameRepository {
           word: Value((cleaned == null || cleaned.isEmpty) ? null : cleaned),
         ),
       );
-      await (_db.update(_db.players)..where((p) => p.id.equals(playerId))).write(
+      await (_db.update(
+        _db.players,
+      )..where((p) => p.id.equals(playerId))).write(
         PlayersCompanion(
           finalScore: Value((player.score + delta).clamp(0, 999999)),
         ),
@@ -182,7 +185,10 @@ class GameRepository {
       players.sort((a, b) => b.finalScore.compareTo(a.finalScore));
       final winner = players.first;
       final ended = row.endedAt ?? row.startedAt;
-      final minutes = ((row.durationMs ?? 60000) / 60000).round().clamp(1, 9999);
+      final minutes = ((row.durationMs ?? 60000) / 60000).round().clamp(
+        1,
+        9999,
+      );
       final durationLabel = minutes >= 60
           ? '${minutes ~/ 60} hr ${minutes % 60} min'
           : '$minutes min';

@@ -282,11 +282,7 @@ class _SwipeToDeleteRowState extends State<_SwipeToDeleteRow> {
 }
 
 class RecentGameRow extends StatelessWidget {
-  const RecentGameRow({
-    required this.game,
-    this.showDivider = true,
-    super.key,
-  });
+  const RecentGameRow({required this.game, this.showDivider = true, super.key});
 
   final RecentGameSummary game;
   final bool showDivider;

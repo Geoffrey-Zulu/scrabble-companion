@@ -266,7 +266,9 @@ class TimerNotifier extends Notifier<TurnTimerState> {
       phase: TimerPhase.expired,
       warned: true,
     );
-    unawaited(ref.read(soundServiceProvider).playExpiry());
+    // Warning already started at 10s — do not restart the clip at zero.
+    // Stop playback and pulse haptics only.
+    unawaited(ref.read(soundServiceProvider).stop());
     unawaited(ref.read(hapticsServiceProvider).expiryPulse());
   }
 

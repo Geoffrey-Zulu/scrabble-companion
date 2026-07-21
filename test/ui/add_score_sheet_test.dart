@@ -50,11 +50,7 @@ void main() {
     tester,
   ) async {
     final overflowed = await captureOverflows(tester, () async {
-      await openSheet(
-        tester,
-        size: const Size(360, 640),
-        keyboardInset: 280,
-      );
+      await openSheet(tester, size: const Size(360, 640), keyboardInset: 280);
       await tester.enterText(find.byType(TextField), 'WORD');
       await tester.pumpAndSettle();
     });

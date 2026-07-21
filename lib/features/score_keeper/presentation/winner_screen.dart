@@ -89,9 +89,10 @@ class _WinnerScreenState extends ConsumerState<WinnerScreen>
                     FadeTransition(
                       opacity: curved,
                       child: ScaleTransition(
-                        scale: Tween<double>(begin: 0.94, end: 1).animate(
-                          curved,
-                        ),
+                        scale: Tween<double>(
+                          begin: 0.94,
+                          end: 1,
+                        ).animate(curved),
                         child: Column(
                           children: [
                             Text(
@@ -163,10 +164,7 @@ class _WinnerScreenState extends ConsumerState<WinnerScreen>
               Row(
                 children: [
                   Expanded(
-                    child: ScSecondaryButton(
-                      label: 'Done',
-                      onPressed: _done,
-                    ),
+                    child: ScSecondaryButton(label: 'Done', onPressed: _done),
                   ),
                   const SizedBox(width: 10),
                   Expanded(

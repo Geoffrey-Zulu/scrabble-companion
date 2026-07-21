@@ -27,11 +27,7 @@ void main() {
   testWidgets('timer screen does not overflow on short viewports', (
     tester,
   ) async {
-    const sizes = <Size>[
-      Size(320, 568),
-      Size(360, 640),
-      Size(390, 700),
-    ];
+    const sizes = <Size>[Size(320, 568), Size(360, 640), Size(390, 700)];
 
     for (final size in sizes) {
       final overflowed = await captureOverflows(tester, () async {

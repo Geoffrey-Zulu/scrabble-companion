@@ -115,7 +115,7 @@ void main() {
     notifier
       ..debugApplyRemaining(5 * 1000)
       ..debugApplyRemaining(0);
-    expect(sound.events, ['warning', 'expiry']);
+    expect(sound.events, ['warning', 'stop']);
     expect(container.read(timerProvider).isExpired, isTrue);
   });
 

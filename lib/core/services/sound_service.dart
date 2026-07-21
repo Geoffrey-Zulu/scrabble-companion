@@ -39,7 +39,8 @@ abstract class SoundService {
 }
 
 /// Always plays [assets/audio/sound1.mp3] (≈13s). Warning starts at the
-/// hard-coded 10s window in [TimerNotifier] — clip may overrun past zero.
+/// hard-coded 10s window in [TimerNotifier]. Playback stops when the timer
+/// hits zero, is paused, or is reset — never restarted on expiry.
 class JustAudioSoundService implements SoundService {
   JustAudioSoundService({AudioPlayer? player})
     : _player = player ?? AudioPlayer();
@@ -82,8 +83,10 @@ class JustAudioSoundService implements SoundService {
   @override
   Future<void> playWarning() => _enqueuePlay();
 
+  /// Expiry is haptic-only in the timer; keep this as a hard stop so callers
+  /// never restart the warning clip when the clock hits zero.
   @override
-  Future<void> playExpiry() => _enqueuePlay();
+  Future<void> playExpiry() => stop();
 
   @override
   Future<void> pausePlayback() async {
@@ -178,7 +181,7 @@ class RecordingSoundService implements SoundService {
 
   @override
   Future<void> playExpiry() async {
-    events.add('expiry');
+    events.add('stop');
   }
 
   @override

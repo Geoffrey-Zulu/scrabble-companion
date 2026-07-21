@@ -113,10 +113,9 @@ class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
     _dismissKeyboard();
     ref.read(hapticsServiceProvider).medium();
     final word = _word.text.trim().toUpperCase();
-    Navigator.of(context).pop((
-      points: _points,
-      word: word.isEmpty ? null : word,
-    ));
+    Navigator.of(
+      context,
+    ).pop((points: _points, word: word.isEmpty ? null : word));
   }
 
   @override

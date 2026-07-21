@@ -71,10 +71,9 @@ class _TimerScreenState extends ConsumerState<TimerScreen>
         bottom: false,
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final ringSize = math.min(
-              280,
-              math.max(180, constraints.maxHeight * 0.34),
-            ).toDouble();
+            final ringSize = math
+                .min(280, math.max(180, constraints.maxHeight * 0.34))
+                .toDouble();
 
             return SingleChildScrollView(
               physics: const ClampingScrollPhysics(),

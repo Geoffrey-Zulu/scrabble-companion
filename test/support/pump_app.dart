@@ -28,9 +28,7 @@ List<Override> testServiceOverrides({
     ),
     settingsProvider.overrideWith(SettingsNotifier.new),
     gameProvider.overrideWith(createGameNotifier ?? TestGameNotifier.new),
-    recentGamesProvider.overrideWith(
-      (ref) async => <RecentGameSummary>[],
-    ),
+    recentGamesProvider.overrideWith((ref) async => <RecentGameSummary>[]),
   ];
 }
 

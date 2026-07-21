@@ -136,7 +136,9 @@ class HomeScreen extends ConsumerWidget {
                             if (!timer.isRunning) {
                               await timerNotifier.resumeOrStart();
                             } else {
-                              await ref.read(hapticsServiceProvider).selection();
+                              await ref
+                                  .read(hapticsServiceProvider)
+                                  .selection();
                             }
                             if (context.mounted) {
                               context.go('/timer');
@@ -292,10 +294,8 @@ class HomeScreen extends ConsumerWidget {
                 padding: EdgeInsets.symmetric(vertical: 24),
                 child: Center(child: CircularProgressIndicator()),
               ),
-              error: (_, _) => RecentGamesList(
-                games: const [],
-                onGameDeleted: (_) {},
-              ),
+              error: (_, _) =>
+                  RecentGamesList(games: const [], onGameDeleted: (_) {}),
               data: (games) => RecentGamesList(
                 games: games,
                 onGameDeleted: (game) {

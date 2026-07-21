@@ -50,7 +50,11 @@ class _ScoreBody extends ConsumerWidget {
 
   final ActiveGame game;
 
-  Future<void> _addFor(BuildContext context, WidgetRef ref, GamePlayer p) async {
+  Future<void> _addFor(
+    BuildContext context,
+    WidgetRef ref,
+    GamePlayer p,
+  ) async {
     final result = await showAddScoreSheet(
       context: context,
       player: p,
@@ -74,7 +78,9 @@ class _ScoreBody extends ConsumerWidget {
     WidgetRef ref,
     GameTurn turn,
   ) async {
-    final player = game.players.firstWhere((p) => p.seatIndex == turn.playerSeat);
+    final player = game.players.firstWhere(
+      (p) => p.seatIndex == turn.playerSeat,
+    );
     final result = await showAddScoreSheet(
       context: context,
       player: player,
@@ -90,11 +96,7 @@ class _ScoreBody extends ConsumerWidget {
     await ref.read(hapticsServiceProvider).selection();
     await ref
         .read(gameProvider.notifier)
-        .editTurn(
-          turnId: turn.dbId!,
-          points: result.points,
-          word: result.word,
-        );
+        .editTurn(turnId: turn.dbId!, points: result.points, word: result.word);
   }
 
   Future<void> _end(BuildContext context, WidgetRef ref) async {
@@ -350,4 +352,3 @@ class _PlayerTile extends StatelessWidget {
     );
   }
 }
-

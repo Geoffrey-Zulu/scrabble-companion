@@ -85,10 +85,7 @@ void main() {
 
       expect(find.text('6 players · 2–6'), findsOneWidget);
       // Off-stage list children are fine — proves the list scrolls instead of overflowing.
-      expect(
-        find.byType(TextField, skipOffstage: false),
-        findsNWidgets(6),
-      );
+      expect(find.byType(TextField, skipOffstage: false), findsNWidgets(6));
       expect(find.byKey(const Key('add-player')), findsNothing);
 
       // Scroll the player list — still no overflow.
@@ -106,7 +103,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(TextField), findsNWidgets(3));
-    final third = tester.widget<TextField>(find.byKey(const ValueKey('player-field-2')));
+    final third = tester.widget<TextField>(
+      find.byKey(const ValueKey('player-field-2')),
+    );
     expect(third.focusNode?.hasFocus, isTrue);
   });
 

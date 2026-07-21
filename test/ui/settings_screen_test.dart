@@ -6,7 +6,9 @@ import 'package:scrabble_companion/features/settings/presentation/settings_scree
 import '../support/pump_app.dart';
 
 void main() {
-  testWidgets('settings lists gameplay and appearance controls', (tester) async {
+  testWidgets('settings lists gameplay and appearance controls', (
+    tester,
+  ) async {
     await pumpSizedApp(tester, home: const SettingsScreen());
 
     expect(find.text('Settings'), findsOneWidget);

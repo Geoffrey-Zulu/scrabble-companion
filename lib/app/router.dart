@@ -99,10 +99,8 @@ GoRouter createAppRouter({String initialLocation = '/home'}) {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/game',
         name: 'game',
-        pageBuilder: (context, state) => _fadeUpPage(
-          key: state.pageKey,
-          child: const ScoreScreen(),
-        ),
+        pageBuilder: (context, state) =>
+            _fadeUpPage(key: state.pageKey, child: const ScoreScreen()),
       ),
       GoRoute(
         parentNavigatorKey: _rootNavigatorKey,

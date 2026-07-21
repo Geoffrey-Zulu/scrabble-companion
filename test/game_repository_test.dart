@@ -42,11 +42,7 @@ void main() {
     expect(game.history.single.points, 30);
     expect(game.history.single.word, 'QUIZZED');
 
-    game = await repo.addTurn(
-      gameId: game.id,
-      playerSeat: 1,
-      points: 12,
-    );
+    game = await repo.addTurn(gameId: game.id, playerSeat: 1, points: 12);
     expect(game.players.map((p) => p.score), [30, 12]);
     expect(game.round, greaterThan(1));
 
