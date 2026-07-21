@@ -34,8 +34,32 @@ git push origin main --tags
 
 ## Store builds
 
-- Android: app bundle signed with upload key (key.properties gitignored)
-- iOS: Archive via Xcode / CI with distribution cert
+### Android (Play Store)
+
+1. Create an upload keystore once (keep a secure offline backup):
+
+```bash
+keytool -genkey -v -keystore android/app/upload-keystore.jks \
+  -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+```
+
+2. Copy `android/key.properties.example` → `android/key.properties` and fill passwords.
+3. Build the signed App Bundle:
+
+```bash
+flutter build appbundle --release
+```
+
+Output: `build/app/outputs/bundle/release/app-release.aab`
+
+4. Upload the `.aab` in [Google Play Console](https://play.google.com/console).
+
+Never commit `key.properties`, `*.jks`, or `*.keystore`.
+
+### iOS
+
+- Archive via Xcode / CI with distribution cert
+
 
 ## Hotfix
 

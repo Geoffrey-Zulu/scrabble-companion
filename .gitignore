@@ -88,3 +88,8 @@ pubspec_overrides.yaml
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+
+**/android/UPLOAD_KEY_BACKUP.txt
+
+# Local sqlite3 prebuilts for flaky-network Android builds
+tool/sqlite3_assets/
