@@ -2,10 +2,10 @@
 
 A premium, offline-first Flutter companion for Scrabble nights: turn timer,
 tournament word checker with definitions, multi-player score keeper, and
-polished settings — designed to feel like a shipping App Store product.
+polished settings - designed to feel like a shipping App Store product.
 
-> **Status:** Engineering foundation complete. Flutter app scaffolding is next
-> (see [`tasks.md`](tasks.md)).
+> **Status:** Milestone 1 complete - runnable app shell with design system.
+> Next: Drift persistence + dictionary (see [`tasks.md`](tasks.md)).
 
 ---
 
@@ -110,7 +110,7 @@ Users can switch NA ↔ British in Settings. See ADR-0005.
 | [`docs/ui_guidelines.md`](docs/ui_guidelines.md) | Design system for Flutter |
 | [`docs/future_ideas.md`](docs/future_ideas.md) | Backlog beyond v1 |
 | [`docs/coding_standards.md`](docs/coding_standards.md) | Style & review bar |
-| [`docs/branching_strategy.md`](docs/branching_strategy.md) | `main` / `develop` / features |
+| [`docs/branching_strategy.md`](docs/branching_strategy.md) | `main` / `dev` / features |
 | [`docs/release_process.md`](docs/release_process.md) | Versioning & store release |
 | [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) | How to contribute |
 | [`docs/adr/`](docs/adr/) | Architecture Decision Records |
@@ -142,8 +142,7 @@ flutter test
 
 | Path | Use |
 | --- | --- |
-| `sound1.mp3` | Countdown warning sound A |
-| `sound2.mp3` | Countdown warning sound B |
+| `sound1.mp3` | Countdown warning chime (~13s) |
 | `ospd-defs.txt` | Offline definitions corpus (restored) |
 | `scrabble-companion-prototype/` | Claude Design handoff (reference only) |
 
@@ -151,4 +150,4 @@ flutter test
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). Dictionary assets may carry additional terms.
+MIT - see [`LICENSE`](LICENSE). Dictionary assets may carry additional terms.

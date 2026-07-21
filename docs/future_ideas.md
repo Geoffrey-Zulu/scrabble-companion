@@ -5,8 +5,8 @@ after the core timer / dictionary / scorekeeper are production-quality.
 
 ## Product
 
-- Rack / anagram helper (given tiles, list valid plays) — privacy-preserving, offline
-- Board overlay camera assist (read tiles via ML) — high complexity
+- Rack / anagram helper (given tiles, list valid plays) - privacy-preserving, offline
+- Board overlay camera assist (read tiles via ML) - high complexity
 - Team / paired scoring modes
 - Club night mode: multiple simultaneous boards
 - Tournament clock styles (chess-like sudden death)
@@ -25,10 +25,10 @@ after the core timer / dictionary / scorekeeper are production-quality.
 - Definition provenance badge (NWL vs OSPD enrichment)
 - DAWG/FST compression for smaller binaries (inspired by twl06)
 
-## Social / meta (careful — offline-first first)
+## Social / meta (careful - offline-first first)
 
 - Pass-and-play only enhancements
-- Optional anonymous high-score board (requires backend — defer)
+- Optional anonymous high-score board (requires backend - defer)
 
 ## Engineering
 

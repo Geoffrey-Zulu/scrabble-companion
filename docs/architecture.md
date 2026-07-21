@@ -31,7 +31,7 @@ boundaries obvious in under ten minutes?
 1. `features/*` may depend on `core/` and domain contracts.
 2. `data/` implements domain contracts; **features never import Drift tables**.
 3. `core/` must not depend on features.
-4. No circular feature imports — share via `core/` or domain.
+4. No circular feature imports - share via `core/` or domain.
 
 ### Feature module layout
 
@@ -63,7 +63,7 @@ Bloc/Cubit is excellent. Riverpod was chosen for:
 - First-class overrides in tests
 - Unified DI + state without a second service locator
 
-Feature teams may still use a Cubit-like `Notifier` style — same idea.
+Feature teams may still use a Cubit-like `Notifier` style - same idea.
 
 ## Navigation architecture
 

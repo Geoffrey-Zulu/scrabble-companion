@@ -313,7 +313,7 @@ a:hover{color:var(--accent)}
               <div style="width:46px;height:46px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;flex:none">GZ</div>
               <div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:600">Geoffrey Zulu</div><div style="font-size:13px;color:var(--muted)">Mobile &amp; web development</div></div>
             </div>
-            <div style="font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:16px;text-wrap:pretty">Enjoying the app? I’m available for freelance work — let’s build something.</div>
+            <div style="font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:16px;text-wrap:pretty">Enjoying the app? I’m available for freelance work - let’s build something.</div>
             <div style="display:flex;gap:10px">
               <a href="https://wa.me/260962572925" target="_blank" rel="noopener" style="flex:1;height:46px;border-radius:23px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px" style-hover="border-color:var(--accent);color:var(--accent)">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.55L3 21l1.95-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>WhatsApp
@@ -772,7 +772,7 @@ class Component extends DCLogic {
       homeTimerBtn: s.tStarted ? 'Resume' : 'Start',
       quickStart: () => { this._warmAudio(); this.setState({ tab: 'timer', tRunning: true, tStarted: true }); },
       scoreCardSub: g ? (leader.name + ' leading') : 'No active game',
-      scoreCardMain: g ? leader.score : '—',
+      scoreCardMain: g ? leader.score : '-',
       scoreCardColor: g ? 'var(--ink)' : 'var(--faint)',
       scoreCardBtn: g ? 'Resume' : 'Start',
       resumeOrStart: () => this.resumeOrStart(),

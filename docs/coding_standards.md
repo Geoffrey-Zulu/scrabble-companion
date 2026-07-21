@@ -2,11 +2,11 @@
 
 ## Principles
 
-1. **Clarity over cleverness** — prefer boring Dart.
-2. **Small PRs** — one concern per PR when possible.
-3. **Tests for logic** — UI can be golden/widget; domain must be unit-tested.
-4. **No dead code** — delete, don’t comment out.
-5. **Match neighbors** — consistency beats personal taste.
+1. **Clarity over cleverness** - prefer boring Dart.
+2. **Small PRs** - one concern per PR when possible.
+3. **Tests for logic** - UI can be golden/widget; domain must be unit-tested.
+4. **No dead code** - delete, don’t comment out.
+5. **Match neighbors** - consistency beats personal taste.
 
 ## Dart / Flutter
 
@@ -24,7 +24,7 @@
 - Name providers `xxxProvider`; notifiers `XxxNotifier`.
 - Prefer `Notifier` / `AsyncNotifier` over legacy `StateNotifier` unless needed.
 - Use `ref.watch(provider.select(...))` to limit rebuilds.
-- Override dependencies in tests — don’t reach into singletons.
+- Override dependencies in tests - don’t reach into singletons.
 
 ## Widgets
 

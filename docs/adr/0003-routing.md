@@ -1,4 +1,4 @@
-# ADR-0003 — Routing: go_router
+# ADR-0003 - Routing: go_router
 
 - **Status:** Accepted
 - **Date:** 2026-07-21

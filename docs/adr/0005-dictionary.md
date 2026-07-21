@@ -1,4 +1,4 @@
-# ADR-0005 — Dictionary: NWL2023 + CSW21 offline
+# ADR-0005 - Dictionary: NWL2023 + CSW21 offline
 
 - **Status:** Accepted
 - **Date:** 2026-07-21
@@ -14,8 +14,8 @@ Word checking is the most important engineering decision. Requirements:
 
 Investigated [scrabblewords/scrabblewords](https://github.com/scrabblewords/scrabblewords):
 
-- `words/North-American/NWL2023.txt` — ~196k lines, **definitions embedded**
-- `words/British/CSW21.txt` — ~279k lines, **definitions embedded**, Collins notice
+- `words/North-American/NWL2023.txt` - ~196k lines, **definitions embedded**
+- `words/British/CSW21.txt` - ~279k lines, **definitions embedded**, Collins notice
 - Format: `WORD definition [pos …]`
 
 Also restored `ospd-defs.txt` (~45k) from the classic UW source (local file had
@@ -37,6 +37,6 @@ Online APIs rejected for v1.
 ## Consequences
 
 - True offline definitions without WordNet packaging complexity.
-- Larger binary — mitigate with compression / single active lexicon in memory.
+- Larger binary - mitigate with compression / single active lexicon in memory.
 - Legal diligence required for CSW redistribution.
 - Parser must handle `{lemma=pos}`, `<lemma=pos>`, multi-sense `/` splits, and `#` comments.

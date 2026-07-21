@@ -1,0 +1,25 @@
+# Dictionary asset notices
+
+## Tournament word lists
+
+Files in this folder were obtained from the open archive:
+
+https://github.com/scrabblewords/scrabblewords
+
+| File | Lexicon | Notes |
+| --- | --- | --- |
+| `nwl2023.txt` | NASPA Word List 2023 (North American) | Lines include definitions |
+| `csw21.txt` | Collins Scrabble Words 2021 (British / international) | Includes a Collins / HarperCollins license comment on line 1 |
+| `ospd-defs.txt` | Classic OSPD-style definitions | Supplemental enrichment corpus |
+
+CSW lists include:
+
+> Published under license with Collins, an imprint of HarperCollins Publishers Limited.
+
+Review licensing before commercial redistribution. A `naOnly` build flavor may
+omit `csw21.txt` if required.
+
+## App code license
+
+Application source is MIT (see repository `LICENSE`). Dictionary data may carry
+additional third-party terms as noted above.

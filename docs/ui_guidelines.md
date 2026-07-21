@@ -1,4 +1,4 @@
-# UI Guidelines — Scrabble Companion
+# UI Guidelines - Scrabble Companion
 
 Source of truth: Claude Design handoff  
 `scrabble-companion-prototype/project/Scrabble Companion.dc.html`  
@@ -11,7 +11,7 @@ These guidelines translate the prototype into Flutter. Prefer matching the
 
 ## Brand & composition
 
-- Warm, calm, tabletop-adjacent — not neon gaming, not purple SaaS.
+- Warm, calm, tabletop-adjacent - not neon gaming, not purple SaaS.
 - First viewport of Home: greeting + three feature cards + primary CTA.
   Avoid dashboard clutter (no stat strips in the hero).
 - Accent terracotta `#D97757` is the only loud color; use it for primary
@@ -137,7 +137,7 @@ Accent CTAs may use soft colored shadow:
 ### Cards (`ScCard`)
 
 White/dark card, 20 radius, 1px line, 22 padding. Hover/press may tint border
-to accent (use `InkWell`/`Material` carefully — avoid Material ink splash that
+to accent (use `InkWell`/`Material` carefully - avoid Material ink splash that
 fights the look; prefer subtle scale 0.98).
 
 ### Primary button
@@ -172,15 +172,15 @@ Pill with soft bg + saturated text + 7px status dot.
 
 ## Screens inventory
 
-1. Splash — accent tile “S/1” + brand fade  
-2. Home — greeting, timer card, dictionary card, score card, CTA, recent  
-3. Timer — ring, controls, duration chips, optional players  
-4. Dictionary — search, suggestions, result, recent, empty  
-5. Settings — gameplay, appearance, about, developer, reset  
-6. Score overlay — grid, history, end game  
-7. Add score sheet — keypad + optional word  
-8. Winner — confetti + stats  
-9. New game sheet — 2–6 name rows  
+1. Splash - accent tile “S/1” + brand fade  
+2. Home - greeting, timer card, dictionary card, score card, CTA, recent  
+3. Timer - ring, controls, duration chips, optional players  
+4. Dictionary - search, suggestions, result, recent, empty  
+5. Settings - gameplay, appearance, about, developer, reset  
+6. Score overlay - grid, history, end game  
+7. Add score sheet - keypad + optional word  
+8. Winner - confetti + stats  
+9. New game sheet - 2–6 name rows  
 
 ---
 

@@ -1,4 +1,4 @@
-# Scrabble Companion — strict static analysis
+# Scrabble Companion - strict static analysis
 # Target: Flutter 3.44.x / Dart 3.12.x stable
 #
 # Prefer catching issues at analyze-time over runtime. Disable rules only with
@@ -110,7 +110,6 @@ linter:
     use_colored_box: true
     use_decorated_box: true
     use_enums: true
-    use_if_null_to_convert_nulls_to_bools: true
     use_is_even_rather_than_modulo: true
     use_late_for_private_fields_and_variables: true
     use_named_constants: true

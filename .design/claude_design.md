@@ -1,7 +1,7 @@
-# Claude Design Import — Scrabble Companion
+# Claude Design Import - Scrabble Companion
 
 **Design URL:** https://claude.ai/design/p/40bd3430-ca21-4f78-b84c-0a617d1c4603?file=Scrabble+Companion.dc.html  
-**MCP endpoint:** `https://api.anthropic.com/v1/design/mcp` — **not available** in this Cursor environment (no Claude Design MCP server registered).  
+**MCP endpoint:** `https://api.anthropic.com/v1/design/mcp` - **not available** in this Cursor environment (no Claude Design MCP server registered).  
 **Fallback source of truth:** `scrabble-companion-prototype/project/Scrabble Companion.dc.html`
 
 This document is the engineering translation of that prototype: tokens, screens,
@@ -14,7 +14,7 @@ motion, and reusable components. Implement Flutter against **this file +**
 
 Casual-premium Scrabble night companion. Warm paper neutrals, terracotta accent,
 large tabular numerals, soft cards with hairline borders. Feels like a physical
-scorepad upgraded — not a fantasy RPG, not a purple SaaS template.
+scorepad upgraded - not a fantasy RPG, not a purple SaaS template.
 
 Author / developer card in Settings: **Geoffrey Zulu** (WhatsApp + email CTAs).
 
@@ -40,9 +40,9 @@ See UI guidelines for full tables. Key brand accent: **`#D97757`** (light) /
 | scoreHero | 40 | 600 | -0.02em |
 | keypadValue | 60 | 300 | -0.03em |
 | body | 16–17 | 500–600 | ~0 |
-| meta | 13–14 | 400 | — |
+| meta | 13–14 | 400 | - |
 | overline | 12 | 600 | 0.08em uppercase |
-| nav | 10.5 | 600 | — |
+| nav | 10.5 | 600 | - |
 
 Font stack in prototype: SF Pro Text / Display. Flutter: platform text theme with
 tabular figures enabled for numeric roles.
@@ -117,11 +117,11 @@ Overlays (not tabs):
 ### Home
 
 - Kicker “SCRABBLE COMPANION” / faint overline + time-based greeting
-- **Timer card** — large remaining label + Start/Pause pill
-- **Dictionary card** — faux search field “Check a word…”
-- **Score Keeper card** — resume subtitle/score or empty prompt
+- **Timer card** - large remaining label + Start/Pause pill
+- **Dictionary card** - faux search field “Check a word…”
+- **Score Keeper card** - resume subtitle/score or empty prompt
 - **Start New Game** full-width accent CTA
-- **Recent Games** — swipe-to-delete rows; empty dashed icon state
+- **Recent Games** - swipe-to-delete rows; empty dashed icon state
 
 ### Timer
 
@@ -214,7 +214,7 @@ Prototype synthesizes a WebAudio chime. Production app must use repo files:
 
 | Setting | Asset |
 | --- | --- |
-| Off | — |
+| Off | - |
 | Sound A | `sound1.mp3` |
 | Sound B | `sound2.mp3` |
 
@@ -225,7 +225,7 @@ Volume control recommended. Haptics remain a boolean master switch.
 ## Accessibility notes from design
 
 - Large tap targets on primary controls (44–92 px)
-- Text size setting already in UI — wire to `textScaler`
+- Text size setting already in UI - wire to `textScaler`
 - Ensure badge colors are not the sole validity signal (include text “Valid” / “Invalid”)
 - Confetti must honor reduce-motion
 
