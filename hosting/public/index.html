@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Privacy Policy for Scrabble Companion — an offline Scrabble timer, word checker, and score keeper."
+    />
+    <title>Privacy Policy · Scrabble Companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Source+Sans+3:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #faf9f5;
+        --bg-deep: #f0eee6;
+        --card: #ffffff;
+        --ink: #141413;
+        --muted: #5c5a52;
+        --faint: #8a877c;
+        --line: #e4e1d7;
+        --accent: #d97757;
+        --accent-soft: #f5e4db;
+        --shadow: 0 18px 50px rgba(40, 32, 24, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: "Source Sans 3", system-ui, sans-serif;
+        background:
+          radial-gradient(1200px 600px at 10% -10%, var(--accent-soft), transparent 55%),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+      }
+
+      .shell {
+        width: min(720px, calc(100% - 2rem));
+        margin: 0 auto;
+        padding: 2.75rem 0 4rem;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        margin-bottom: 1.75rem;
+        color: var(--ink);
+        text-decoration: none;
+      }
+
+      .tile {
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 0.35rem;
+        background: var(--accent);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-family: Fraunces, Georgia, serif;
+        font-weight: 650;
+        font-size: 1rem;
+        box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.12);
+      }
+
+      .brand span {
+        font-family: Fraunces, Georgia, serif;
+        font-size: 1.15rem;
+        font-weight: 650;
+        letter-spacing: -0.02em;
+      }
+
+      header h1 {
+        margin: 0 0 0.4rem;
+        font-family: Fraunces, Georgia, serif;
+        font-size: clamp(2.1rem, 5vw, 3rem);
+        font-weight: 650;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+      }
+
+      .meta {
+        margin: 0 0 1.75rem;
+        color: var(--faint);
+        font-size: 0.95rem;
+      }
+
+      .lede {
+        margin: 0 0 1.5rem;
+        max-width: 38rem;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.65;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 1.1rem;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      section {
+        padding: 1.35rem 1.4rem;
+        border-top: 1px solid var(--line);
+      }
+
+      section:first-child {
+        border-top: 0;
+      }
+
+      section h2 {
+        margin: 0 0 0.45rem;
+        font-family: Fraunces, Georgia, serif;
+        font-size: 1.2rem;
+        font-weight: 650;
+        letter-spacing: -0.02em;
+      }
+
+      section p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      footer {
+        margin-top: 1.75rem;
+        color: var(--faint);
+        font-size: 0.92rem;
+        line-height: 1.55;
+      }
+
+      footer a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <a class="brand" href="/" aria-label="Scrabble Companion">
+        <span class="tile" aria-hidden="true">S</span>
+        <span>Scrabble Companion</span>
+      </a>
+
+      <header>
+        <h1>Privacy Policy</h1>
+        <p class="meta">Last updated: July 2026</p>
+        <p class="lede">
+          Scrabble Companion is an offline-first Android app for turn timing,
+          word checking, and score keeping. This page explains what data we
+          handle — and what we do not.
+        </p>
+      </header>
+
+      <div class="card">
+        <section>
+          <h2>Offline first</h2>
+          <p>
+            Scrabble Companion is designed to be fully functional without an
+            internet connection. We do not transmit your game data, scores, or
+            settings to any external servers.
+          </p>
+        </section>
+        <section>
+          <h2>Local data storage</h2>
+          <p>
+            All game history and personal preferences are stored locally on your
+            device. This data remains on your phone and is not accessible by us.
+          </p>
+        </section>
+        <section>
+          <h2>Analytics &amp; tracking</h2>
+          <p>
+            We do not use any third-party analytics, tracking cookies, or
+            advertising identifiers. Your use of the app is private.
+          </p>
+        </section>
+        <section>
+          <h2>Permissions</h2>
+          <p>
+            The app requires only the minimal permissions needed to function. We
+            do not access your contacts, location, or camera.
+          </p>
+        </section>
+        <section>
+          <h2>Feedback</h2>
+          <p>
+            If you choose to send feedback by email or WhatsApp, we will only use
+            your contact details to respond to your enquiry. We do not share your
+            contact information with third parties.
+          </p>
+        </section>
+        <section>
+          <h2>Children’s privacy</h2>
+          <p>
+            The app does not knowingly collect personal information from
+            children. Because gameplay data stays on-device, there is no remote
+            profile or account for a child to create.
+          </p>
+        </section>
+        <section>
+          <h2>Changes</h2>
+          <p>
+            We may update this policy if the app’s behaviour changes. The “Last
+            updated” date at the top of this page will always reflect the latest
+            revision.
+          </p>
+        </section>
+        <section>
+          <h2>Contact</h2>
+          <p>
+            Questions about privacy? Contact Geoffrey Zulu at
+            <a href="mailto:zulugeoffrey034@gmail.com">zulugeoffrey034@gmail.com</a>
+            or WhatsApp
+            <a href="https://wa.me/260962572925">+260 96 257 2925</a>.
+          </p>
+        </section>
+      </div>
+
+      <footer>
+        <p>
+          © 2026 Geoffrey Zulu · Scrabble Companion is an unofficial companion
+          app and is not affiliated with Hasbro, Mattel, or NASPA.
+        </p>
+      </footer>
+    </main>
+  </body>
+</html>

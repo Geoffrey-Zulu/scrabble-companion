@@ -19,7 +19,7 @@ App version lives in `pubspec.yaml` (`version: X.Y.Z+BUILD`).
 5. Manual smoke: timer, dictionary (both lexicons), full game, settings persistence, cold start offline (airplane mode)
 6. Accessibility smoke (large text + TalkBack/VoiceOver spot-check)
 7. Store assets ready (icon, screenshots)
-8. Privacy policy URL live
+8. Privacy policy URL live (`https://scrabble-companion-be4ae.web.app`)
 9. Dictionary `NOTICE` present
 10. No secrets in tree
 
