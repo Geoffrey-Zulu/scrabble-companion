@@ -1,4 +1,4 @@
-# Tasks — Scrabble Companion
+# Tasks - Scrabble Companion
 
 Living engineering checklist. Update status as work lands.
 Statuses: `[ ]` todo · `[~]` in progress · `[x]` done · `[-]` cancelled
@@ -7,7 +7,7 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 0 — Project foundation
+## Milestone 0 - Project foundation
 
 - [x] Research latest Flutter/Dart stable (3.44.6 / 3.12.2)
 - [x] Inspect Claude Design handoff (MCP unavailable → local prototype)
@@ -16,7 +16,7 @@ Last updated: **2026-07-21**
 - [x] Restore `ospd-defs.txt` (was empty); document formats
 - [x] Decide architecture, state, routing, persistence (ADRs)
 - [x] Create README, docs/, ADRs, CHANGELOG, LICENSE, .gitignore, analysis_options
-- [x] Skip Melos (single-package app) — document rationale
+- [x] Skip Melos (single-package app) - document rationale
 - [x] Initialize `develop` branch and document PR workflow
 - [x] Scaffold Flutter project (`flutter create`) with org/bundle IDs
 - [x] Move sounds into `assets/audio/` and register in pubspec
@@ -24,13 +24,13 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 1 — Architecture & app shell
+## Milestone 1 - Architecture & app shell
 
 - [x] Create feature-first folder structure under `lib/`
 - [x] Wire `ProviderScope` + app bootstrap
 - [x] Implement design tokens (`AppColors`, `AppSpacing`, `AppRadii`, `AppMotion`, `AppTypography`)
 - [x] Implement ThemeData light + dark + system resolution
-- [x] Implement text scale setting (Small / Default / Large)
+- [x] Implement text scale setting (Small / Medium / Large)
 - [x] go_router with `StatefulShellRoute` for Home / Timer / Dictionary / Settings
 - [x] Splash screen matching prototype (`tileIn` + fade brand)
 - [x] Shared chrome: bottom nav, toast, bottom sheet scaffold
@@ -38,7 +38,7 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 2 — Design system & reusable widgets
+## Milestone 2 - Design system & reusable widgets
 
 - [x] `ScCard` (home feature cards)
 - [x] `ScPrimaryButton` / `ScSecondaryButton` / `ScIconButton`
@@ -55,18 +55,18 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 3 — Persistence (Drift)
+## Milestone 3 - Persistence (Drift)
 
 - [x] Add Drift + sqlite3_flutter_libs + path_provider
 - [x] Schema: settings, games, players, turns, favorites, recent_lookups, stats aggregates
-- [ ] Migrations strategy (versioned) — v1 schema only so far
+- [ ] Migrations strategy (versioned) - v1 schema only so far
 - [x] Repository interfaces + Drift implementations (settings, lookups, favorites)
 - [x] Seed defaults on first launch
 - [ ] Repository unit tests with in-memory Drift
 
 ---
 
-## Milestone 4 — Dictionary (critical path)
+## Milestone 4 - Dictionary (critical path)
 
 - [x] Vendor NWL2023.txt + CSW21.txt (English only) with NOTICE
 - [x] Build-time (or first-launch) parser for `WORD def [pos …]` lines
@@ -86,44 +86,52 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 5 — Timer
+## Milestone 5 - Timer
 
 - [x] Precise ticker (prefer `Stopwatch` + animation/TVs over naïve 1s `Timer` drift)
-- [x] Durations: 30 / 60 / 120 / 180 seconds
+- [x] Durations: iOS wheel with presets 30s / 1:00 / 1:30 / 2:00 / 3:00
 - [x] Pause / resume / reset
 - [x] Circular progress ring with warn color transition
 - [x] Warning threshold setting (5 / 10 / 20 / 30s)
-- [x] Sound: Off / Sound A (`sound1.mp3`) / Sound B (`sound2.mp3`) + volume
-- [x] Haptics on start, pause, warn ticks, expiry
+- [x] Sound via `just_audio`: Off / A / B + Settings preview tap
+  - Policy: play once on enter-warn + once on expiry (no loop for full threshold)
+- [x] Haptics on start, pause, warn ticks, expiry (+ `VIBRATE` permission)
+- [x] Expiry: double/long haptic pulse (no screen flash)
+- [x] Splash uses real `assets/branding/logo.png`
+- [x] Warning hard-coded at 10s (`sound1.mp3` may overrun; stopped on reset)
+- [-] Player chips / names on timer - cancelled; timer stays standalone
+- [x] Scrabble rules sheet (Home info + Settings → Scrabble rules)
 - [ ] Player chips when active game exists; switch player resets remaining
 - [x] Standalone mode copy when no game
 - [x] Background / lifecycle: pause or freeze accurately; document behavior
+- [x] Timer layout: scroll + adaptive ring (no bottom overflow on short phones)
 - [ ] Landscape-friendly layout (optional stretch goal for v1.1)
 - [x] Widget + unit tests for timer state machine
+- [x] UI widget suite: home / timer / dictionary / settings / shell navigation
 
 ---
 
-## Milestone 6 — Score Keeper
+## Milestone 6 - Score Keeper
 
-- [ ] New Game sheet: 2–6 players (match prototype max)
-- [ ] Default names `Player N` when blank
-- [ ] Score overlay with leader highlight
-- [ ] Add-score bottom sheet + numeric keypad (max 3 digits)
-- [ ] Optional word field (uppercase A–Z)
-- [ ] Round derivation from turn index
-- [ ] Undo last turn
-- [ ] End Game → winner + stats (highest turn, avg, rounds, duration)
+- [x] New Game sheet: 2–6 players (match prototype max)
+- [x] Default names `Player N` when blank
+- [x] Score overlay with leader highlight
+- [x] Add-score bottom sheet + numeric keypad (max 3 digits)
+- [x] Optional word field (uppercase A–Z)
+- [x] Round derivation from turn index
+- [x] Undo last turn
+- [x] End Game → winner + stats (highest turn, avg, rounds, duration)
 - [ ] Confetti / letter-tile fall animation (respect reduce motion)
-- [ ] Persist finished games to recent list (cap 12)
-- [ ] Swipe-to-delete recent games
-- [ ] Resume in-progress game after restart
-- [ ] Edit previous round scores (discovered need — implement after undo)
+- [x] Persist finished games to recent list (cap 12)
+- [x] Swipe-to-delete recent games
+- [x] Resume in-progress game after restart
+- [ ] Edit previous round scores (discovered need - implement after undo)
 - [ ] Aggregate statistics store (wins, longest game, highest word)
 - [ ] Integration tests for full game lifecycle
 
 ---
 
-## Milestone 7 — Home & navigation polish
+## Milestone 7 - Home & navigation polish
 
 - [ ] Greeting by time of day
 - [ ] Timer / Dictionary / Score Keeper cards
@@ -134,7 +142,7 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 8 — Settings
+## Milestone 8 - Settings
 
 - [ ] Gameplay: warn-at, timer sound (Off/A/B), volume, haptics
 - [ ] Dictionary: NWL vs CSW
@@ -146,7 +154,7 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 9 — Animations, haptics, sound
+## Milestone 9 - Animations, haptics, sound
 
 - [ ] Screen transitions (subtle fade / shared axis)
 - [ ] Button press feedback
@@ -158,7 +166,7 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 10 — Accessibility
+## Milestone 10 - Accessibility
 
 - [ ] Screen reader labels for nav, timer controls, keypad
 - [ ] Large text / text scale verification on all screens
@@ -169,7 +177,7 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 11 — Testing & quality
+## Milestone 11 - Testing & quality
 
 - [ ] Unit tests ≥ critical domain (timer, scoring, dictionary)
 - [ ] Widget tests for primary screens
@@ -180,7 +188,7 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 12 — Performance
+## Milestone 12 - Performance
 
 - [ ] Profile cold start; keep dictionary load off UI jank path
 - [ ] Avoid unnecessary rebuilds (Riverpod selects)
@@ -190,7 +198,7 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 13 — Release readiness
+## Milestone 13 - Release readiness
 
 - [ ] App icons + splash (native)
 - [ ] Store metadata drafts
@@ -202,7 +210,7 @@ Last updated: **2026-07-21**
 
 ---
 
-## Milestone 14 — Polish
+## Milestone 14 - Polish
 
 - [ ] Microcopy pass
 - [ ] Empty / error / edge states

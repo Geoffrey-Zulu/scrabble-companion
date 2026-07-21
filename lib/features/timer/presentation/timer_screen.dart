@@ -1,8 +1,13 @@
+import 'dart:async';
+import 'dart:math' as math;
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/design.dart';
-import '../../../core/settings/settings_notifier.dart';
+import '../../../core/services/haptics_service.dart';
+import '../../../core/services/sound_service.dart';
 import '../../../core/widgets/sc_buttons.dart';
 import '../../../core/widgets/sc_timer_ring.dart';
 import '../application/timer_notifier.dart';
@@ -38,110 +43,268 @@ class _TimerScreenState extends ConsumerState<TimerScreen>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(soundServiceProvider);
+
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final timer = ref.watch(timerProvider);
-    final warnAt = ref.watch(settingsProvider.select((s) => s.warnAtSeconds));
     final notifier = ref.read(timerProvider.notifier);
+    const warnAt = TimerNotifier.warnAtSeconds;
     final inWarn = timer.isInWarning(warnAt);
     final ringColor = timer.isExpired || inWarn
         ? colors.accent
         : (timer.isRunning ? colors.accent : colors.ink);
     final timeColor = timer.isExpired || inWarn ? colors.accent : colors.ink;
-    final reduceMotion = MediaQuery.disableAnimationsOf(context);
+    final pickerEnabled = !timer.isRunning;
 
     return Scaffold(
+      backgroundColor: colors.bg,
       body: SafeArea(
         bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.pageX,
-            20,
-            AppSpacing.pageX,
-            120,
-          ),
-          child: Column(
-            children: [
-              Text('Turn Timer', style: textTheme.headlineSmall),
-              const SizedBox(height: 18),
-              Text(
-                'Standalone · start a game to track players by name',
-                textAlign: TextAlign.center,
-                style: textTheme.bodySmall?.copyWith(color: colors.faint),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final ringSize = math.min(
+              280.0,
+              math.max(180.0, constraints.maxHeight * 0.34),
+            );
+
+            return SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.pageX,
+                20,
+                AppSpacing.pageX,
+                AppSpacing.scrollBottomClearance,
               ),
-              const Spacer(),
-              Semantics(
-                label:
-                    'Timer ${timer.formattedRemaining}, ${timer.statusLabel}',
-                liveRegion: true,
-                child: ScTimerRing(
-                  progress: timer.progress,
-                  color: ringColor,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AnimatedDefaultTextStyle(
-                        duration: reduceMotion
-                            ? Duration.zero
-                            : AppMotion.toggle,
-                        style:
-                            textTheme.displayLarge?.copyWith(
-                              color: timeColor,
-                            ) ??
-                            TextStyle(color: timeColor, fontSize: 74),
-                        child: Text(timer.formattedRemaining),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        timer.statusLabel,
-                        style: textTheme.bodySmall?.copyWith(
-                          color: colors.faint,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Column(
+                  children: [
+                    Text('Turn Timer', style: textTheme.headlineSmall),
+                    SizedBox(
+                      height: math.max(16, constraints.maxHeight * 0.035),
+                    ),
+                    Semantics(
+                      label:
+                          'Timer ${timer.formattedRemaining}, ${timer.statusLabel}',
+                      liveRegion: true,
+                      child: ScTimerRing(
+                        size: ringSize,
+                        progress: timer.progress,
+                        color: ringColor,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              timer.formattedRemaining,
+                              style:
+                                  textTheme.displayLarge?.copyWith(
+                                    color: timeColor,
+                                    fontSize: ringSize < 240 ? 52 : 64,
+                                  ) ??
+                                  TextStyle(
+                                    color: timeColor,
+                                    fontSize: ringSize < 240 ? 52 : 64,
+                                  ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              timer.statusLabel,
+                              style: textTheme.bodySmall?.copyWith(
+                                color: colors.faint,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      height: math.max(12, constraints.maxHeight * 0.03),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ScIconButton(
+                          icon: Icons.refresh,
+                          semanticLabel: 'Reset timer',
+                          onPressed: () {
+                            unawaited(notifier.reset());
+                          },
+                        ),
+                        const SizedBox(width: 16),
+                        _PlayPauseButton(
+                          running: timer.isRunning,
+                          onPressed: () {
+                            unawaited(notifier.toggle());
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 36),
+                    Text(
+                      'Duration',
+                      style: textTheme.labelMedium?.copyWith(
+                        color: colors.faint,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Opacity(
+                      opacity: pickerEnabled ? 1 : 0.45,
+                      child: IgnorePointer(
+                        ignoring: !pickerEnabled,
+                        child: _DurationWheel(
+                          durationSeconds: timer.durationSeconds,
+                          onChanged: (seconds) {
+                            notifier.setDuration(seconds);
+                            ref.read(hapticsServiceProvider).selection();
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ScIconButton(
-                    icon: Icons.refresh,
-                    semanticLabel: 'Reset timer',
-                    onPressed: notifier.reset,
-                  ),
-                  const SizedBox(width: 16),
-                  _PlayPauseButton(
-                    running: timer.isRunning,
-                    onPressed: notifier.toggle,
-                  ),
-                ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/// iOS-style drum limited to the preset turn lengths.
+class _DurationWheel extends StatefulWidget {
+  const _DurationWheel({
+    required this.durationSeconds,
+    required this.onChanged,
+  });
+
+  final int durationSeconds;
+  final ValueChanged<int> onChanged;
+
+  @override
+  State<_DurationWheel> createState() => _DurationWheelState();
+}
+
+class _DurationWheelState extends State<_DurationWheel> {
+  late final FixedExtentScrollController _controller;
+  var _suppressNotify = false;
+
+  static String _label(int seconds) {
+    final m = seconds ~/ 60;
+    final s = seconds % 60;
+    return '$m:${s.toString().padLeft(2, '0')}';
+  }
+
+  static int _presetIndex(int seconds) {
+    final index = TimerNotifier.durations.indexOf(seconds);
+    return index < 0 ? 1 : index;
+  }
+
+  static int _normalizeIndex(int index) {
+    final n = TimerNotifier.durations.length;
+    return ((index % n) + n) % n;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = FixedExtentScrollController(
+      initialItem: _presetIndex(widget.durationSeconds),
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant _DurationWheel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.durationSeconds == widget.durationSeconds) {
+      return;
+    }
+    final target = _presetIndex(widget.durationSeconds);
+    if (!_controller.hasClients) {
+      return;
+    }
+    if (_normalizeIndex(_controller.selectedItem) == target) {
+      return;
+    }
+    // Never jump during the parent rebuild that setDuration just triggered -
+    // that re-enters onSelectedItemChanged and blows up Riverpod.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_controller.hasClients) {
+        return;
+      }
+      final current = _controller.selectedItem;
+      final delta = target - _normalizeIndex(current);
+      if (delta == 0) {
+        return;
+      }
+      _suppressNotify = true;
+      _controller.jumpToItem(current + delta);
+      _suppressNotify = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    final brightness = Theme.of(context).brightness;
+
+    return Semantics(
+      label: 'Turn duration',
+      child: SizedBox(
+        height: 168,
+        child: CupertinoTheme(
+          data: CupertinoThemeData(
+            brightness: brightness,
+            primaryColor: colors.accent,
+            textTheme: CupertinoTextThemeData(
+              pickerTextStyle: TextStyle(
+                color: colors.ink,
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+                fontFeatures: const [FontFeature.tabularFigures()],
               ),
-              const SizedBox(height: 26),
-              Wrap(
-                spacing: 9,
-                children: [
-                  for (final seconds in TimerNotifier.durations)
-                    _DurationChip(
-                      label: _formatDuration(seconds),
-                      selected: timer.durationSeconds == seconds,
-                      onTap: () => notifier.setDuration(seconds),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 12),
+            ),
+          ),
+          child: CupertinoPicker(
+            scrollController: _controller,
+            itemExtent: 46,
+            diameterRatio: 1.5,
+            magnification: 1.14,
+            useMagnifier: true,
+            squeeze: 0.9,
+            looping: true,
+            onSelectedItemChanged: (index) {
+              if (_suppressNotify) {
+                return;
+              }
+              final presets = TimerNotifier.durations;
+              final seconds = presets[_normalizeIndex(index)];
+              if (seconds == widget.durationSeconds) {
+                return;
+              }
+              // Defer so we never mutate a provider mid-build.
+              Future<void>(() {
+                if (!mounted) {
+                  return;
+                }
+                widget.onChanged(seconds);
+              });
+            },
+            children: [
+              for (final seconds in TimerNotifier.durations)
+                Center(child: Text(_label(seconds))),
             ],
           ),
         ),
       ),
     );
-  }
-
-  String _formatDuration(int seconds) {
-    final m = seconds ~/ 60;
-    final s = seconds % 60;
-    return '$m:${s.toString().padLeft(2, '0')}';
   }
 }
 
@@ -171,50 +334,6 @@ class _PlayPauseButton extends StatelessWidget {
               running ? Icons.pause_rounded : Icons.play_arrow_rounded,
               size: 36,
               color: colors.onAccent,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DurationChip extends StatelessWidget {
-  const _DurationChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.appColors;
-    return Material(
-      color: selected ? colors.accentSoft : colors.field,
-      borderRadius: BorderRadius.circular(18),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minHeight: AppSpacing.minTouchTarget,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  fontFeatures: const [FontFeature.tabularFigures()],
-                  color: selected ? colors.accent : colors.muted,
-                ),
-              ),
             ),
           ),
         ),

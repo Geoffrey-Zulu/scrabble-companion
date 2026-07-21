@@ -12,4 +12,8 @@ abstract final class AppSpacing {
   static const double section = 34;
   static const double navHeight = 84;
   static const double minTouchTarget = 44;
+
+  /// Bottom inset so the last content sits just above the tab bar - not a
+  /// large empty scroll region.
+  static const double scrollBottomClearance = navHeight + 12;
 }

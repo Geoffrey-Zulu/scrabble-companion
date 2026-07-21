@@ -3,7 +3,7 @@ enum AppThemeMode { light, dark, system }
 
 enum TextScaleOption {
   small(0.9, 'Small'),
-  medium(1, 'Default'),
+  medium(1, 'Medium'),
   large(1.15, 'Large');
 
   const TextScaleOption(this.factor, this.label);
@@ -22,7 +22,7 @@ class AppSettings {
     this.textScale = TextScaleOption.medium,
     this.warnAtSeconds = 10,
     this.soundMode = TimerSoundMode.soundA,
-    this.soundVolume = 0.8,
+    this.soundVolume = 1,
     this.hapticsEnabled = true,
     this.dictionaryLocale = DictionaryLocale.northAmerican,
   });

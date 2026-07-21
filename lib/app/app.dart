@@ -52,6 +52,9 @@ class _ScrabbleAppState extends ConsumerState<ScrabbleApp> {
         AppThemeMode.dark => ThemeMode.dark,
         AppThemeMode.system => ThemeMode.system,
       },
+      // Soften light ↔ dark swaps (default feels like a hard cut).
+      themeAnimationDuration: AppMotion.themeCrossfade,
+      themeAnimationCurve: Curves.easeInOutCubic,
       builder: (context, child) {
         final media = MediaQuery.of(context);
         final systemFactor = media.textScaler.scale(16) / 16;

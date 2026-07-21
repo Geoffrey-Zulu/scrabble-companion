@@ -28,6 +28,7 @@ class HapticsService {
       return;
     }
     await HapticFeedback.mediumImpact();
+    await HapticFeedback.vibrate();
   }
 
   Future<void> heavy() async {
@@ -35,6 +36,29 @@ class HapticsService {
       return;
     }
     await HapticFeedback.heavyImpact();
+    await HapticFeedback.vibrate();
+  }
+
+  /// Strong double pulse when the turn clock expires (no screen flash).
+  Future<void> expiryPulse({
+    Duration gap = const Duration(milliseconds: 280),
+  }) async {
+    if (!_isEnabled()) {
+      return;
+    }
+    await HapticFeedback.heavyImpact();
+    await HapticFeedback.vibrate();
+    await Future<void>.delayed(gap);
+    if (!_isEnabled()) {
+      return;
+    }
+    await HapticFeedback.heavyImpact();
+    await HapticFeedback.vibrate();
+    await Future<void>.delayed(const Duration(milliseconds: 120));
+    if (!_isEnabled()) {
+      return;
+    }
+    await HapticFeedback.vibrate();
   }
 
   Future<void> selection() async {

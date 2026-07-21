@@ -4,8 +4,8 @@
 
 | Path | Purpose |
 | --- | --- |
-| `audio/sound1.mp3` | Timer warning sound A |
-| `audio/sound2.mp3` | Timer warning sound B |
+| `audio/sound1.mp3` | Timer warning / expiry chime (~13s) |
+| `branding/logo.png` | Splash / in-app brand mark (from `logo_ios/logo.png`) |
 | `dictionaries/nwl2023.txt` | North American tournament list + defs |
 | `dictionaries/csw21.txt` | British / CSW21 list + defs |
 | `dictionaries/ospd-defs.txt` | Supplemental OSPD definitions |
@@ -20,7 +20,7 @@ Source masters live in `icons/` for regeneration. They are **copied** into:
 - Android: `android/app/src/main/res/mipmap-*/ic_launcher.png`
 - iOS: `ios/Runner/Assets.xcassets/AppIcon.appiconset/`
 
-Do not reference `icons/` from `pubspec.yaml` — native builds read the platform folders.
+Do not reference `icons/` from `pubspec.yaml` - native builds read the platform folders.
 
 To reinstall after replacing masters:
 
@@ -32,7 +32,7 @@ To reinstall after replacing masters:
 
 | Path | Notes |
 | --- | --- |
-| `logo_android/` | Extra logo density set — **not wired** into the Flutter UI or launcher |
-| `logo_ios/` | Extra logo set — **not wired** into the Flutter UI or splash |
+| `logo_android/` | Extra logo density set - **not wired** into the Flutter UI or launcher |
+| `logo_ios/` | Extra logo set - **not wired** into the Flutter UI or splash |
 
 Kept in the repo only as unused brand leftovers. Safe to delete later if unwanted.

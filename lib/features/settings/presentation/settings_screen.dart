@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/design/design.dart';
+import '../../../core/services/haptics_service.dart';
 import '../../../core/settings/app_settings.dart';
 import '../../../core/settings/settings_notifier.dart';
 import '../../../core/widgets/sc_buttons.dart';
 import '../../../core/widgets/toast_controller.dart';
+import '../../rules/presentation/rules_sheet.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
+
+  static final _whatsAppUri = Uri.parse('https://wa.me/260962572925');
+
+  Future<void> _openWhatsApp(WidgetRef ref) async {
+    await ref.read(hapticsServiceProvider).selection();
+    final opened = await launchUrl(
+      _whatsAppUri,
+      mode: LaunchMode.externalApplication,
+    );
+    if (!opened) {
+      ref.read(toastProvider.notifier).show('Couldn’t open WhatsApp');
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,8 +41,9 @@ class SettingsScreen extends ConsumerWidget {
             AppSpacing.pageX,
             14,
             AppSpacing.pageX,
-            120,
+            AppSpacing.scrollBottomClearance,
           ),
+          physics: const ClampingScrollPhysics(),
           children: [
             const SizedBox(height: 12),
             Text('Settings', style: textTheme.headlineMedium),
@@ -34,41 +51,19 @@ class SettingsScreen extends ConsumerWidget {
             const _SectionLabel(label: 'Gameplay'),
             _SettingsGroup(
               children: [
-                _SettingsRow(
-                  title: 'Warning at',
-                  subtitle: 'Accent glows in the final seconds',
-                  trailing: _ChipRow(
-                    options: const [5, 10, 20, 30],
-                    selected: settings.warnAtSeconds,
-                    labelBuilder: (v) => '${v}s',
-                    onSelected: notifier.setWarnAtSeconds,
-                  ),
-                ),
-                _SettingsRow(
-                  title: 'Timer sound',
-                  trailing: _ChipRow(
-                    options: TimerSoundMode.values,
-                    selected: settings.soundMode,
-                    labelBuilder: (mode) => switch (mode) {
-                      TimerSoundMode.off => 'Off',
-                      TimerSoundMode.soundA => 'A',
-                      TimerSoundMode.soundB => 'B',
-                    },
-                    onSelected: notifier.setSoundMode,
-                  ),
-                ),
-                _SettingsRow(
+                _ToggleSetting(
                   title: 'Haptics',
-                  trailing: Switch.adaptive(
-                    value: settings.hapticsEnabled,
-                    onChanged: (value) {
-                      notifier.setHapticsEnabled(enabled: value);
-                    },
-                  ),
+                  value: settings.hapticsEnabled,
+                  onChanged: (value) {
+                    notifier.setHapticsEnabled(enabled: value);
+                    if (value) {
+                      ref.read(hapticsServiceProvider).medium();
+                    }
+                  },
                 ),
-                _SettingsRow(
+                _StackedSetting(
                   title: 'Dictionary',
-                  trailing: _ChipRow(
+                  child: _ChipRow(
                     options: DictionaryLocale.values,
                     selected: settings.dictionaryLocale,
                     labelBuilder: (locale) => switch (locale) {
@@ -84,50 +79,28 @@ class SettingsScreen extends ConsumerWidget {
             const _SectionLabel(label: 'Appearance'),
             _SettingsGroup(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 15, 18, 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Theme', style: textTheme.titleMedium),
-                      const SizedBox(height: 12),
-                      _ThemeSegment(
-                        selected: settings.themeMode,
-                        onSelected: notifier.setThemeMode,
-                      ),
-                    ],
+                _StackedSetting(
+                  title: 'Theme',
+                  child: _ThemeSegment(
+                    selected: settings.themeMode,
+                    onSelected: notifier.setThemeMode,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(18, 15, 18, 15),
-                  child: Column(
+                _StackedSetting(
+                  title: 'Text size',
+                  child: Row(
                     children: [
-                      Row(
-                        children: [
-                          Text('Text size', style: textTheme.titleMedium),
-                          const Spacer(),
-                          Text(
-                            settings.textScale.label,
-                            style: textTheme.bodySmall,
+                      for (final option in TextScaleOption.values) ...[
+                        Expanded(
+                          child: _TextSizeChip(
+                            option: option,
+                            selected: settings.textScale == option,
+                            onTap: () => notifier.setTextScale(option),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          for (final option in TextScaleOption.values) ...[
-                            Expanded(
-                              child: _TextSizeChip(
-                                option: option,
-                                selected: settings.textScale == option,
-                                onTap: () => notifier.setTextScale(option),
-                              ),
-                            ),
-                            if (option != TextScaleOption.large)
-                              const SizedBox(width: 6),
-                          ],
-                        ],
-                      ),
+                        ),
+                        if (option != TextScaleOption.large)
+                          const SizedBox(width: 8),
+                      ],
                     ],
                   ),
                 ),
@@ -137,28 +110,27 @@ class SettingsScreen extends ConsumerWidget {
             const _SectionLabel(label: 'About'),
             _SettingsGroup(
               children: [
-                _SettingsRow(
-                  title: 'Version',
-                  trailing: Text(
-                    '0.1.0',
-                    style: textTheme.titleMedium?.copyWith(
-                      color: colors.muted,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
+                _AboutLine(
+                  title: 'Scrabble rules',
+                  showChevron: true,
+                  onTap: () {
+                    ref.read(hapticsServiceProvider).selection();
+                    showScrabbleRulesSheet(context);
+                  },
                 ),
-                _SettingsRow(
+                const _AboutLine(title: 'Version', value: '0.1.0'),
+                _AboutLine(
                   title: 'Privacy Policy',
-                  trailing: Icon(Icons.chevron_right, color: colors.faint),
+                  showChevron: true,
                   onTap: () {
                     ref
                         .read(toastProvider.notifier)
                         .show('Privacy policy coming soon');
                   },
                 ),
-                _SettingsRow(
+                _AboutLine(
                   title: 'Send Feedback',
-                  trailing: Icon(Icons.chevron_right, color: colors.faint),
+                  showChevron: true,
                   onTap: () {
                     ref
                         .read(toastProvider.notifier)
@@ -169,40 +141,22 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 26),
             const _SectionLabel(label: 'Developer'),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                color: colors.card,
+            Material(
+              color: colors.card,
+              borderRadius: BorderRadius.circular(AppRadii.md),
+              child: InkWell(
                 borderRadius: BorderRadius.circular(AppRadii.md),
-                border: Border.all(color: colors.line),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                onTap: () => _openWhatsApp(ref),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppRadii.md),
+                    border: Border.all(color: colors.line),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(18, 16, 14, 18),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: colors.accentSoft,
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                          child: SizedBox(
-                            width: 46,
-                            height: 46,
-                            child: Center(
-                              child: Text(
-                                'GZ',
-                                style: TextStyle(
-                                  color: colors.accent,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 17,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,21 +165,34 @@ class SettingsScreen extends ConsumerWidget {
                                 'Geoffrey Zulu',
                                 style: textTheme.titleMedium,
                               ),
+                              const SizedBox(height: 2),
                               Text(
                                 'Mobile & web development',
-                                style: textTheme.bodySmall,
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: colors.muted,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Enjoying the app? I’m available for freelance work - let’s build something.',
+                                style: textTheme.bodySmall?.copyWith(
+                                  height: 1.5,
+                                ),
                               ),
                             ],
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Icon(
+                            Icons.chevron_right,
+                            color: colors.faint,
+                            size: 22,
+                          ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 14),
-                    Text(
-                      'Enjoying the app? I’m available for freelance work — let’s build something.',
-                      style: textTheme.bodySmall?.copyWith(height: 1.5),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -240,7 +207,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 22),
             Text(
-              'Scrabble Companion · Made with care',
+              'Scrabble Companion · Made with love',
               textAlign: TextAlign.center,
               style: textTheme.bodySmall?.copyWith(color: colors.faint),
             ),
@@ -297,17 +264,68 @@ class _SettingsGroup extends StatelessWidget {
   }
 }
 
-class _SettingsRow extends StatelessWidget {
-  const _SettingsRow({
+/// Title (and optional subtitle) on top; control(s) full-width below.
+class _StackedSetting extends StatelessWidget {
+  const _StackedSetting({required this.title, required this.child});
+
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 14, 18, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(title, style: textTheme.titleMedium),
+          const SizedBox(height: 12),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
+class _ToggleSetting extends StatelessWidget {
+  const _ToggleSetting({
     required this.title,
-    required this.trailing,
-    this.subtitle,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String title;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+      child: Row(
+        children: [
+          Expanded(child: Text(title, style: textTheme.titleMedium)),
+          Switch.adaptive(value: value, onChanged: onChanged),
+        ],
+      ),
+    );
+  }
+}
+
+/// Compact About / link row - title + value/chevron only (no empty third column).
+class _AboutLine extends StatelessWidget {
+  const _AboutLine({
+    required this.title,
+    this.value,
+    this.showChevron = false,
     this.onTap,
   });
 
   final String title;
-  final String? subtitle;
-  final Widget trailing;
+  final String? value;
+  final bool showChevron;
   final VoidCallback? onTap;
 
   @override
@@ -318,26 +336,14 @@ class _SettingsRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
       child: Row(
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: textTheme.titleMedium),
-                if (subtitle != null) ...[
-                  const SizedBox(height: 1),
-                  Text(
-                    subtitle!,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: colors.faint,
-                      fontSize: 12.5,
-                    ),
-                  ),
-                ],
-              ],
+          Expanded(child: Text(title, style: textTheme.titleMedium)),
+          if (value != null)
+            Text(
+              value!,
+              style: textTheme.bodyMedium?.copyWith(color: colors.muted),
             ),
-          ),
-          const SizedBox(width: 12),
-          trailing,
+          if (showChevron)
+            Icon(Icons.chevron_right, color: colors.faint, size: 22),
         ],
       ),
     );
@@ -345,7 +351,6 @@ class _SettingsRow extends StatelessWidget {
     if (onTap == null) {
       return row;
     }
-
     return InkWell(onTap: onTap, child: row);
   }
 }
@@ -367,7 +372,8 @@ class _ChipRow<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
     return Wrap(
-      spacing: 6,
+      spacing: 8,
+      runSpacing: 8,
       children: [
         for (final option in options)
           Semantics(
@@ -383,9 +389,10 @@ class _ChipRow<T> extends StatelessWidget {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(
                     minHeight: AppSpacing.minTouchTarget,
+                    minWidth: 52,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
                     child: Center(
                       child: Text(
                         labelBuilder(option),
@@ -487,9 +494,9 @@ class _TextSizeChip extends StatelessWidget {
           height: 38,
           child: Center(
             child: Text(
-              'A',
+              option.label,
               style: TextStyle(
-                fontSize: 14 * option.factor,
+                fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: selected ? colors.accent : colors.muted,
               ),

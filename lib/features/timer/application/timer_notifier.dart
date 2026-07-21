@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/services/haptics_service.dart';
 import '../../../core/services/sound_service.dart';
-import '../../../core/settings/settings_notifier.dart';
 
 enum TimerPhase { idle, running, paused, expired }
 
@@ -80,7 +80,11 @@ final timerProvider = NotifierProvider<TimerNotifier, TurnTimerState>(
 );
 
 class TimerNotifier extends Notifier<TurnTimerState> {
-  static const durations = [30, 60, 120, 180];
+  /// Preset turn lengths: 30s, 1m, 1m30s, 2m, 3m.
+  static const durations = [30, 60, 90, 120, 180];
+
+  /// Warning chime starts here; clip may continue a bit past zero.
+  static const int warnAtSeconds = 10;
 
   Timer? _ticker;
   Stopwatch? _stopwatch;
@@ -93,11 +97,17 @@ class TimerNotifier extends Notifier<TurnTimerState> {
   }
 
   void setDuration(int seconds) {
+    final nearest = durations.contains(seconds)
+        ? seconds
+        : durations.reduce(
+            (a, b) => (a - seconds).abs() <= (b - seconds).abs() ? a : b,
+          );
     _cancelTicker();
     _stopwatch = null;
+    unawaited(ref.read(soundServiceProvider).stop());
     state = TurnTimerState(
-      durationSeconds: seconds,
-      remainingMs: seconds * 1000,
+      durationSeconds: nearest,
+      remainingMs: nearest * 1000,
     );
   }
 
@@ -111,12 +121,16 @@ class TimerNotifier extends Notifier<TurnTimerState> {
 
   Future<void> resumeOrStart() async {
     if (state.isExpired) {
-      reset();
+      await reset();
     }
     _baselineMs = state.remainingMs;
     _stopwatch = Stopwatch()..start();
     state = state.copyWith(phase: TimerPhase.running);
     _startTicker();
+    // Continue a mid-warn chime that was paused with the clock.
+    if (state.warned && state.isInWarning(warnAtSeconds)) {
+      unawaited(ref.read(soundServiceProvider).resumePlayback());
+    }
     await ref.read(hapticsServiceProvider).medium();
   }
 
@@ -124,6 +138,7 @@ class TimerNotifier extends Notifier<TurnTimerState> {
     _syncRemainingFromStopwatch();
     _cancelTicker();
     _stopwatch?.stop();
+    await ref.read(soundServiceProvider).pausePlayback();
     state = state.copyWith(phase: TimerPhase.paused);
     await ref.read(hapticsServiceProvider).light();
   }
@@ -136,9 +151,10 @@ class TimerNotifier extends Notifier<TurnTimerState> {
     await pause();
   }
 
-  void reset() {
+  Future<void> reset() async {
     _cancelTicker();
     _stopwatch = null;
+    await ref.read(soundServiceProvider).stop();
     state = TurnTimerState(
       durationSeconds: state.durationSeconds,
       remainingMs: state.durationSeconds * 1000,
@@ -151,6 +167,7 @@ class TimerNotifier extends Notifier<TurnTimerState> {
     final next = (state.playerIndex + 1) % count;
     _cancelTicker();
     _stopwatch = null;
+    unawaited(ref.read(soundServiceProvider).stop());
     state = TurnTimerState(
       durationSeconds: state.durationSeconds,
       remainingMs: state.durationSeconds * 1000,
@@ -162,6 +179,7 @@ class TimerNotifier extends Notifier<TurnTimerState> {
   void selectPlayer(int index) {
     _cancelTicker();
     _stopwatch = null;
+    unawaited(ref.read(soundServiceProvider).stop());
     state = TurnTimerState(
       durationSeconds: state.durationSeconds,
       remainingMs: state.durationSeconds * 1000,
@@ -184,7 +202,16 @@ class TimerNotifier extends Notifier<TurnTimerState> {
       0,
       _baselineMs - _stopwatch!.elapsedMilliseconds,
     );
-    final warnAt = ref.read(settingsProvider).warnAtSeconds;
+    _applyRemaining(remaining);
+  }
+
+  /// Applies a remaining-ms sample. Exposed for tests so we can assert warn /
+  /// expiry side effects without waiting on a real wall clock.
+  @visibleForTesting
+  void debugApplyRemaining(int remainingMs) => _applyRemaining(remainingMs);
+
+  void _applyRemaining(int remaining) {
+    const warnAt = TimerNotifier.warnAtSeconds;
     final previousSeconds = state.remainingSeconds;
     final next = state.copyWith(remainingMs: remaining);
 
@@ -193,6 +220,8 @@ class TimerNotifier extends Notifier<TurnTimerState> {
       return;
     }
 
+    // Fire once when crossing into the warn window - never loop the clip.
+    // Asset is longer than [warnAtSeconds]; we stop on reset instead of trimming.
     final enteredWarn =
         !state.warned &&
         next.remainingSeconds <= warnAt &&
@@ -217,7 +246,7 @@ class TimerNotifier extends Notifier<TurnTimerState> {
       warned: true,
     );
     unawaited(ref.read(soundServiceProvider).playExpiry());
-    unawaited(ref.read(hapticsServiceProvider).heavy());
+    unawaited(ref.read(hapticsServiceProvider).expiryPulse());
   }
 
   void _syncRemainingFromStopwatch() {

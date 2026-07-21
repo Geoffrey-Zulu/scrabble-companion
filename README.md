@@ -2,9 +2,9 @@
 
 A premium, offline-first Flutter companion for Scrabble nights: turn timer,
 tournament word checker with definitions, multi-player score keeper, and
-polished settings — designed to feel like a shipping App Store product.
+polished settings - designed to feel like a shipping App Store product.
 
-> **Status:** Milestone 1 complete — runnable app shell with design system.
+> **Status:** Milestone 1 complete - runnable app shell with design system.
 > Next: Drift persistence + dictionary (see [`tasks.md`](tasks.md)).
 
 ---
@@ -142,8 +142,7 @@ flutter test
 
 | Path | Use |
 | --- | --- |
-| `sound1.mp3` | Countdown warning sound A |
-| `sound2.mp3` | Countdown warning sound B |
+| `sound1.mp3` | Countdown warning chime (~13s) |
 | `ospd-defs.txt` | Offline definitions corpus (restored) |
 | `scrabble-companion-prototype/` | Claude Design handoff (reference only) |
 
@@ -151,4 +150,4 @@ flutter test
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). Dictionary assets may carry additional terms.
+MIT - see [`LICENSE`](LICENSE). Dictionary assets may carry additional terms.

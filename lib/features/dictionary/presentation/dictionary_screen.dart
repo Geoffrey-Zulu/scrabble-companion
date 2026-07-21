@@ -52,120 +52,131 @@ class _DictionaryScreenState extends ConsumerState<DictionaryScreen> {
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.pageX,
-            14,
-            AppSpacing.pageX,
-            120,
-          ),
-          children: [
-            const SizedBox(height: 12),
-            Text('Word Checker', style: textTheme.headlineMedium),
-            const SizedBox(height: 18),
-            ScSearchField(
-              controller: _controller,
-              onChanged: notifier.setQuery,
-              onSubmitted: (_) => notifier.check(),
-              onClear: () {
-                notifier.clearQuery();
-                _controller.clear();
-              },
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.pageX,
+              14,
+              AppSpacing.pageX,
+              AppSpacing.scrollBottomClearance,
             ),
-            const SizedBox(height: 8),
-            lexiconAsync.when(
-              loading: () => Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  'Loading word list…',
-                  style: textTheme.bodySmall?.copyWith(color: colors.muted),
-                ),
-              ),
-              error: (error, _) => Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  'Could not load dictionary.',
-                  style: textTheme.bodySmall?.copyWith(color: colors.invalid),
-                ),
-              ),
-              data: (lexicon) {
-                final locale = ref.watch(
-                  settingsProvider.select((s) => s.dictionaryLocale),
-                );
-                final label = locale.name == 'british' ? 'CSW21' : 'NWL2023';
-                return Text(
-                  '${lexicon.wordCount} words · $label',
-                  style: textTheme.bodySmall?.copyWith(color: colors.faint),
-                );
-              },
-            ),
-            if (showSuggest) ...[
-              const SizedBox(height: 8),
-              _SuggestionTile(
-                word: ui.query,
-                hint: 'Check ↵',
-                accent: true,
-                onTap: () => notifier.check(ui.query),
-              ),
-              for (final word in ui.suggestions)
-                _SuggestionTile(word: word, onTap: () => notifier.check(word)),
-            ],
-            if (showResult) ...[
+            physics: const ClampingScrollPhysics(),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            children: [
               const SizedBox(height: 12),
-              _ResultCard(
-                result: ui.result!,
-                isFavorite: ui.favorites.contains(ui.result!.word),
-                onFavorite: notifier.toggleFavorite,
+              Text('Word Checker', style: textTheme.headlineMedium),
+              const SizedBox(height: 18),
+              ScSearchField(
+                controller: _controller,
+                onChanged: notifier.setQuery,
+                onSubmitted: (_) => notifier.check(),
+                onClear: () {
+                  notifier.clearQuery();
+                  _controller.clear();
+                },
               ),
-            ],
-            if (showEmpty) ...[
-              if (ui.recent.isNotEmpty) ...[
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Text(
-                      'RECENT',
-                      style: textTheme.labelMedium?.copyWith(
-                        color: colors.faint,
-                      ),
-                    ),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: notifier.clearRecent,
-                      child: const Text('Clear'),
-                    ),
-                  ],
-                ),
-                for (final recent in ui.recent)
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      recent.word,
-                      style: textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.02 * 17,
-                      ),
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: recent.valid ? colors.valid : colors.invalid,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        Icon(Icons.chevron_right, color: colors.faint),
-                      ],
-                    ),
-                    onTap: () => notifier.check(recent.word),
+              const SizedBox(height: 8),
+              lexiconAsync.when(
+                loading: () => Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Text(
+                    'Loading word list…',
+                    style: textTheme.bodySmall?.copyWith(color: colors.muted),
                   ),
-              ] else
-                const _EmptyDictionary(),
+                ),
+                error: (error, _) => Padding(
+                  padding: const EdgeInsets.only(top: 12),
+                  child: Text(
+                    'Could not load dictionary.',
+                    style: textTheme.bodySmall?.copyWith(color: colors.invalid),
+                  ),
+                ),
+                data: (lexicon) {
+                  final locale = ref.watch(
+                    settingsProvider.select((s) => s.dictionaryLocale),
+                  );
+                  final label = locale.name == 'british' ? 'CSW21' : 'NWL2023';
+                  return Text(
+                    '${lexicon.wordCount} words · $label',
+                    style: textTheme.bodySmall?.copyWith(color: colors.faint),
+                  );
+                },
+              ),
+              if (showSuggest) ...[
+                const SizedBox(height: 8),
+                _SuggestionTile(
+                  word: ui.query,
+                  hint: 'Check ↵',
+                  accent: true,
+                  onTap: () => notifier.check(ui.query),
+                ),
+                for (final word in ui.suggestions)
+                  _SuggestionTile(
+                    word: word,
+                    onTap: () => notifier.check(word),
+                  ),
+              ],
+              if (showResult) ...[
+                const SizedBox(height: 12),
+                _ResultCard(
+                  result: ui.result!,
+                  isFavorite: ui.favorites.contains(ui.result!.word),
+                  onFavorite: notifier.toggleFavorite,
+                ),
+              ],
+              if (showEmpty) ...[
+                if (ui.recent.isNotEmpty) ...[
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        'RECENT',
+                        style: textTheme.labelMedium?.copyWith(
+                          color: colors.faint,
+                        ),
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: notifier.clearRecent,
+                        child: const Text('Clear'),
+                      ),
+                    ],
+                  ),
+                  for (final recent in ui.recent)
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(
+                        recent.word,
+                        style: textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.02 * 17,
+                        ),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: recent.valid
+                                  ? colors.valid
+                                  : colors.invalid,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          Icon(Icons.chevron_right, color: colors.faint),
+                        ],
+                      ),
+                      onTap: () => notifier.check(recent.word),
+                    ),
+                ] else
+                  const _EmptyDictionary(),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

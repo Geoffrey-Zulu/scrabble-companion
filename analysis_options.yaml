@@ -1,4 +1,4 @@
-# Scrabble Companion — strict static analysis
+# Scrabble Companion - strict static analysis
 # Target: Flutter 3.44.x / Dart 3.12.x stable
 #
 # Prefer catching issues at analyze-time over runtime. Disable rules only with

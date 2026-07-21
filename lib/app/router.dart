@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/services/haptics_service.dart';
 import '../core/widgets/sc_bottom_nav.dart';
 import '../core/widgets/sc_toast.dart';
 import '../features/dictionary/presentation/dictionary_screen.dart';
 import '../features/home/presentation/home_screen.dart';
+import '../features/score_keeper/domain/game_models.dart';
+import '../features/score_keeper/presentation/score_screen.dart';
+import '../features/score_keeper/presentation/winner_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/timer/presentation/timer_screen.dart';
 
@@ -60,22 +65,41 @@ GoRouter createAppRouter({String initialLocation = '/home'}) {
           ),
         ],
       ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/game',
+        name: 'game',
+        builder: (context, state) => const ScoreScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/game/winner',
+        name: 'game-winner',
+        builder: (context, state) {
+          final game = state.extra;
+          if (game is! ActiveGame) {
+            return const ScoreScreen();
+          }
+          return WinnerScreen(game: game);
+        },
+      ),
     ],
   );
 }
 
-class AppShell extends StatelessWidget {
+class AppShell extends ConsumerWidget {
   const AppShell({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: Stack(children: [navigationShell, const ScToastHost()]),
       bottomNavigationBar: ScBottomNav(
         currentIndex: navigationShell.currentIndex,
         onTap: (index) {
+          ref.read(hapticsServiceProvider).selection();
           navigationShell.goBranch(
             index,
             initialLocation: index == navigationShell.currentIndex,

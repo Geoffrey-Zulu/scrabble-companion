@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/design/design.dart';
 
-/// Brand splash with tile pop + delayed wordmark fade.
+/// Brand splash - real logo asset + delayed wordmark fade.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({required this.onFinished, super.key});
 
@@ -15,8 +15,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  late final Animation<double> _tileScale;
-  late final Animation<double> _tileOpacity;
+  late final Animation<double> _logoScale;
+  late final Animation<double> _logoOpacity;
   late final Animation<double> _titleOpacity;
 
   @override
@@ -26,17 +26,17 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
       duration: AppMotion.splashHold,
     );
-    _tileScale = TweenSequence<double>([
+    _logoScale = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(
-          begin: 0.55,
+          begin: 0.82,
           end: 1,
         ).chain(CurveTween(curve: AppMotion.emphasized)),
         weight: 52,
       ),
       TweenSequenceItem(tween: ConstantTween<double>(1), weight: 48),
     ]).animate(_controller);
-    _tileOpacity = TweenSequence<double>([
+    _logoOpacity = TweenSequence<double>([
       TweenSequenceItem(
         tween: Tween<double>(
           begin: 0,
@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
       TweenSequenceItem(
         tween: Tween<double>(
           begin: 0,
-          end: 0.55,
+          end: 0.7,
         ).chain(CurveTween(curve: Curves.easeOut)),
         weight: 75,
       ),
@@ -83,10 +83,10 @@ class _SplashScreenState extends State<SplashScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _SplashTile(colors: colors),
+              const _SplashLogo(),
               const SizedBox(height: 22),
               Opacity(
-                opacity: 0.55,
+                opacity: 0.7,
                 child: Text(
                   'Scrabble Companion',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -111,8 +111,8 @@ class _SplashScreenState extends State<SplashScreen>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Opacity(
-                  opacity: _tileOpacity.value,
-                  child: Transform.scale(scale: _tileScale.value, child: child),
+                  opacity: _logoOpacity.value,
+                  child: Transform.scale(scale: _logoScale.value, child: child),
                 ),
                 const SizedBox(height: 22),
                 Opacity(
@@ -128,65 +128,24 @@ class _SplashScreenState extends State<SplashScreen>
               ],
             );
           },
-          child: _SplashTile(colors: colors),
+          child: const _SplashLogo(),
         ),
       ),
     );
   }
 }
 
-class _SplashTile extends StatelessWidget {
-  const _SplashTile({required this.colors});
-
-  final AppColors colors;
+class _SplashLogo extends StatelessWidget {
+  const _SplashLogo();
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: colors.accent,
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: [
-          BoxShadow(
-            color: colors.accent.withValues(alpha: 0.45),
-            blurRadius: 40,
-            offset: const Offset(0, 20),
-          ),
-        ],
-      ),
-      child: const SizedBox(
-        width: 96,
-        height: 96,
-        child: Stack(
-          children: [
-            Center(
-              child: Text(
-                'S',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 52,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -1.5,
-                  height: 1,
-                ),
-              ),
-            ),
-            Positioned(
-              right: 11,
-              bottom: 8,
-              child: Text(
-                '1',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  height: 1,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return Image.asset(
+      'assets/branding/logo.png',
+      width: 112,
+      height: 112,
+      filterQuality: FilterQuality.high,
+      semanticLabel: 'Scrabble Companion',
     );
   }
 }
