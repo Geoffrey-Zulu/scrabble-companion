@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--desk:#E7E4DB;--frame:#1b1a18;--bg:#FAF9F5;--card:#FFFFFF;--ink:#141413;--muted:#8C8A80;--faint:#B0AEA5;--line:#E8E6DC;--accent:#D97757;--accent-soft:#F5E4DB;--valid:#4F8A6D;--valid-soft:#E6EFE9;--invalid:#B4534B;--invalid-soft:#F3E4E2;--field:#F1EFE8;}
+[data-theme="dark"]{--desk:#0E0D0B;--frame:#000000;--bg:#181713;--card:#221F1B;--ink:#F4F2EB;--muted:#918E84;--faint:#605D55;--line:#2E2B26;--accent:#E28A6C;--accent-soft:#3A2A22;--valid:#7BB093;--valid-soft:#22302A;--invalid:#D07E74;--invalid-soft:#332320;--field:#2A2723;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#E7E4DB;font-family:-apple-system,"SF Pro Text","SF Pro Display",system-ui,sans-serif;color:#141413}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--accent)}
+::-webkit-scrollbar{width:0;height:0}
+@keyframes tileIn{0%{opacity:0;transform:scale(.55) translateY(6px)}55%{opacity:1}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes fadeName{0%,25%{opacity:0}100%{opacity:.55}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.06)}100%{transform:scale(1);opacity:1}}
+@keyframes fall{to{transform:translateY(640px) rotate(var(--r,180deg));opacity:0}}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+</style>
+</helmet>
+<div data-theme="{{ effTheme }}" style="min-height:100vh;background:var(--desk);display:flex;align-items:center;justify-content:center;padding:30px;font-family:-apple-system,'SF Pro Text','SF Pro Display',system-ui,sans-serif">
+  <div style="position:relative;width:393px;height:852px;background:var(--frame);border-radius:56px;padding:13px;box-shadow:0 50px 100px -35px rgba(0,0,0,.55), 0 0 0 1.5px rgba(255,255,255,.06) inset">
+    <div style="position:relative;width:100%;height:100%;background:var(--bg);border-radius:44px;overflow:hidden;display:flex;flex-direction:column;color:var(--ink)">
+
+      <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#000;border-radius:20px;z-index:60"></div>
+
+      <div style="height:56px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 32px 7px;flex:none;z-index:40">
+        <span style="font-weight:600;font-size:15px;letter-spacing:.02em">9:41</span>
+        <span style="display:flex;align-items:center;gap:7px">
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="5" y="4.5" width="3" height="7.5" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1" opacity=".35"/></svg>
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M8.5 2.6c2.2 0 4.2.83 5.7 2.2l1.2-1.3C13.7 1.8 11.2.8 8.5.8 5.8.8 3.3 1.8 1.6 3.5l1.2 1.3C4.3 3.43 6.3 2.6 8.5 2.6z"/><path d="M8.5 6c1.2 0 2.3.46 3.15 1.2l1.2-1.3C11.75 4.85 10.2 4.2 8.5 4.2S5.25 4.85 4.15 5.9l1.2 1.3C6.2 6.46 7.3 6 8.5 6z"/><circle cx="8.5" cy="9.6" r="1.7"/></svg>
+          <svg width="26" height="13" viewBox="0 0 26 13" fill="none"><rect x="1" y="1" width="21" height="11" rx="3.2" stroke="currentColor" stroke-opacity=".4" stroke-width="1.2"/><rect x="3" y="3" width="16" height="7" rx="1.6" fill="currentColor"/><rect x="23.4" y="4.2" width="1.8" height="4.6" rx=".9" fill="currentColor" fill-opacity=".5"/></svg>
+        </span>
+      </div>
+
+      <div style="flex:1;overflow-y:auto;overflow-x:hidden;zoom:{{ rootZoom }}">
+
+        <!-- HOME -->
+        <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:14px 26px 120px;animation:fadeIn .3s ease">
+          <div style="margin:14px 0 26px">
+            <div style="font-size:13px;font-weight:600;letter-spacing:.06em;color:var(--faint)">{{ greetingKicker }}</div>
+            <div style="font-size:34px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin-top:4px">{{ greeting }}</div>
+          </div>
+
+          <div onClick="{{ goTimer }}" style="background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;margin-bottom:16px;cursor:pointer" style-hover="border-color:var(--accent)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+              <span style="font-size:13px;font-weight:600;letter-spacing:.02em">Timer</span>
+              <span style="color:var(--faint);display:flex"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M9 2h6"/></svg></span>
+            </div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div style="font-size:46px;font-weight:300;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1">{{ homeTimerLabel }}</div>
+              <button onClick="{{ quickStart }}" style="height:44px;padding:0 20px;border-radius:22px;background:var(--accent);color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer">{{ homeTimerBtn }}</button>
+            </div>
+          </div>
+
+          <div onClick="{{ goDict }}" style="background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;margin-bottom:16px;cursor:pointer" style-hover="border-color:var(--accent)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+              <span style="font-size:13px;font-weight:600">Dictionary</span>
+              <span style="color:var(--faint);display:flex"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-1.6-1-4-1.4-6-1.4S3 5 3 5v13s1-.5 3-.5 4.4.5 6 1.5c1.6-1 4-1.5 6-1.5s3 .5 3 .5V5s-1-.4-3-.4-4.4.4-6 1.4zM12 6v13"/></svg></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;height:48px;padding:0 16px;border-radius:24px;background:var(--field);color:var(--muted)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+              <span style="font-size:16px">Check a word…</span>
+            </div>
+          </div>
+
+          <div onClick="{{ resumeOrStart }}" style="background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;margin-bottom:26px;cursor:pointer" style-hover="border-color:var(--accent)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+              <span style="font-size:13px;font-weight:600">Score Keeper</span>
+              <span style="color:var(--faint);display:flex"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14M10 5v14M14 5v14M18 5v14"/><path d="M3.5 16.5 20.5 9.5"/></svg></span>
+            </div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between">
+              <div>
+                <div style="font-size:14px;color:var(--muted)">{{ scoreCardSub }}</div>
+                <div style="font-size:40px;font-weight:600;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums;color:{{ scoreCardColor }}">{{ scoreCardMain }}</div>
+              </div>
+              <span style="height:44px;padding:0 20px;display:inline-flex;align-items:center;border-radius:22px;background:var(--field);font-size:15px;font-weight:600">{{ scoreCardBtn }}</span>
+            </div>
+          </div>
+
+          <button onClick="{{ startNewGame }}" style="width:100%;height:56px;border-radius:28px;background:var(--accent);color:#fff;border:none;font-size:17px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 10px 24px -12px var(--accent)" style-hover="filter:brightness(1.04)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            Start New Game
+          </button>
+
+          <div style="margin-top:34px">
+            <div style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:8px">Recent Games</div>
+            <sc-if value="{{ hasHistory }}" hint-placeholder-val="{{ true }}">
+              <sc-for list="{{ recentGames }}" as="g" hint-placeholder-count="2">
+                <div ref="{{ g.wrapRef }}" style="position:relative;overflow:hidden">
+                  <button onClick="{{ g.onDelete }}" style="position:absolute;top:0;right:0;bottom:0;width:84px;border:none;background:var(--invalid);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>
+                  </button>
+                  <div ref="{{ g.dragRef }}" style="position:relative;display:flex;align-items:center;gap:14px;padding:15px 4px;background:var(--bg);border-bottom:1px solid var(--line);touch-action:pan-y;cursor:grab">
+                    <div style="width:42px;height:42px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;flex:none">{{ g.initial }}</div>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.winner }}</div>
+                      <div style="font-size:13px;color:var(--muted)">{{ g.date }} · {{ g.duration }}</div>
+                    </div>
+                    <div style="font-size:17px;font-weight:600;font-variant-numeric:tabular-nums">{{ g.score }}</div>
+                  </div>
+                </div>
+              </sc-for>
+              <div style="text-align:center;font-size:12px;color:var(--faint);margin-top:12px">Swipe a game left to remove it</div>
+            </sc-if>
+            <sc-if value="{{ noHistory }}" hint-placeholder-val="{{ true }}">
+              <div style="text-align:center;padding:28px 20px;color:var(--muted)">
+                <div style="width:56px;height:56px;margin:0 auto 12px;border-radius:16px;border:1.5px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--faint)">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 4v16M10 4v16M14 4v16M18 4v16"/></svg>
+                </div>
+                <div style="font-size:15px">No games yet</div>
+                <div style="font-size:13px;color:var(--faint);margin-top:2px">Finished games will appear here.</div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- TIMER -->
+        <sc-if value="{{ isTimer }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:20px 26px 120px;display:flex;flex-direction:column;align-items:center;animation:fadeIn .3s ease">
+          <div style="font-size:22px;font-weight:600;letter-spacing:-.01em;margin:6px 0 18px">Turn Timer</div>
+
+          <sc-if value="{{ timerHasPlayers }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;gap:10px;margin-bottom:22px;max-width:341px;overflow-x:auto;padding-bottom:2px">
+              <sc-for list="{{ timerPlayers }}" as="p" hint-placeholder-count="2">
+                <button onClick="{{ p.onTap }}" style="flex:none;height:40px;padding:0 18px;border-radius:20px;border:1.5px solid {{ p.border }};background:{{ p.bg }};color:{{ p.color }};font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s">{{ p.name }}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ timerStandalone }}" hint-placeholder-val="{{ true }}">
+            <div style="font-size:13.5px;color:var(--faint);margin-bottom:22px;text-align:center">Standalone · start a game to track players by name</div>
+          </sc-if>
+
+          <div style="position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center">
+            <svg width="300" height="300" viewBox="0 0 300 300" style="position:absolute;top:0;left:0;transform:rotate(-90deg)">
+              <circle cx="150" cy="150" r="135" fill="none" stroke="var(--line)" stroke-width="10"/>
+              <circle cx="150" cy="150" r="135" fill="none" stroke="{{ ringColor }}" stroke-width="10" stroke-linecap="round" stroke-dasharray="848.2" stroke-dashoffset="{{ ringOffset }}" style="transition:stroke-dashoffset 1s linear, stroke .3s ease"/>
+            </svg>
+            <div style="text-align:center">
+              <sc-if value="{{ timerHasPlayers }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--muted);margin-bottom:2px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ timerCurrentName }}</div></sc-if>
+              <div style="font-size:74px;font-weight:300;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1;color:{{ timeColor }}">{{ timeLabel }}</div>
+              <div style="font-size:14px;color:var(--faint);margin-top:6px">{{ timerStatus }}</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:16px;margin:34px 0 26px">
+            <button onClick="{{ resetTimer }}" style="width:64px;height:64px;border-radius:32px;background:var(--field);color:var(--ink);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="filter:brightness(.97)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8m0-5v5h5"/></svg>
+            </button>
+            <button onClick="{{ toggleTimer }}" style="width:92px;height:92px;border-radius:46px;background:var(--accent);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px -14px var(--accent)" style-hover="filter:brightness(1.04)">
+              <sc-if value="{{ timerRunning }}" hint-placeholder-val="{{ true }}"><svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.4"/><rect x="14" y="5" width="4" height="14" rx="1.4"/></svg></sc-if>
+              <sc-if value="{{ timerPaused }}" hint-placeholder-val="{{ true }}"><svg width="36" height="36" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px"><path d="M7 5.5v13a1 1 0 0 0 1.5.87l11-6.5a1 1 0 0 0 0-1.74l-11-6.5A1 1 0 0 0 7 5.5z"/></svg></sc-if>
+            </button>
+            <sc-if value="{{ timerHasPlayers }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ switchPlayer }}" style="width:64px;height:64px;border-radius:32px;background:var(--field);color:var(--ink);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="filter:brightness(.97)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 4l3 3-3 3M20 7H8M7 20l-3-3 3-3M4 17h12"/></svg>
+              </button>
+            </sc-if>
+          </div>
+
+          <div style="display:flex;gap:9px">
+            <sc-for list="{{ durations }}" as="d" hint-placeholder-count="4">
+              <button onClick="{{ d.onTap }}" style="height:36px;padding:0 15px;border-radius:18px;border:none;background:{{ d.bg }};color:{{ d.color }};font-size:14px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums">{{ d.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- DICTIONARY -->
+        <sc-if value="{{ isDict }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:14px 26px 120px;animation:fadeIn .3s ease">
+          <div style="font-size:28px;font-weight:600;letter-spacing:-.02em;margin:12px 0 18px">Word Checker</div>
+          <div style="display:flex;align-items:center;gap:10px;height:54px;padding:0 18px;border-radius:27px;background:var(--field);margin-bottom:8px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+            <input value="{{ query }}" onInput="{{ onQuery }}" ref="{{ inputRef }}" placeholder="Check a word" autocomplete="off" autocapitalize="characters" spellcheck="false" style="flex:1;border:none;background:transparent;outline:none;font-size:18px;font-weight:500;color:var(--ink);letter-spacing:.01em;font-family:inherit;text-transform:uppercase" />
+            <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ true }}"><button onClick="{{ clearQuery }}" style="border:none;background:var(--line);color:var(--muted);width:24px;height:24px;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></sc-if>
+          </div>
+
+          <sc-if value="{{ showSuggest }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-bottom:8px">
+              <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="3">
+                <button onClick="{{ s.onTap }}" style="width:100%;display:flex;align-items:center;gap:12px;padding:13px 6px;border:none;border-bottom:1px solid var(--line);cursor:pointer;background:none;text-align:left;font-family:inherit;color:var(--ink)">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ s.iconColor }}" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+                  <span style="font-size:17px;font-weight:500;letter-spacing:.02em;flex:1">{{ s.word }}</span>
+                  <span style="font-size:13px;font-weight:600;color:var(--accent);white-space:nowrap">{{ s.hint }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--card);border:1px solid var(--line);border-radius:22px;padding:24px;margin:12px 0 8px;animation:fadeUp .28s ease">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+                <span style="display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px;border-radius:15px;background:{{ resultBadgeBg }};color:{{ resultBadgeColor }};font-size:13px;font-weight:600">
+                  <span style="width:7px;height:7px;border-radius:4px;background:currentColor"></span>{{ resultBadge }}
+                </span>
+                <div style="display:flex;gap:6px">
+                  <button onClick="{{ toggleFav }}" style="width:38px;height:38px;border-radius:19px;background:var(--field);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:{{ favColor }}"><svg width="19" height="19" viewBox="0 0 24 24" fill="{{ favFill }}" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.86-4.25 4.14 1 5.85L12 17.9l-5.25 2.76 1-5.85L3.5 9.66l5.9-.86z"/></svg></button>
+                  <button onClick="{{ shareWord }}" style="width:38px;height:38px;border-radius:19px;background:var(--field);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4m0 0L8.5 7.5M12 4l3.5 3.5M6 12v6a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-6"/></svg></button>
+                </div>
+              </div>
+              <div style="font-size:44px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin:4px 0 2px">{{ resultWord }}</div>
+              <sc-if value="{{ resultValid }}" hint-placeholder-val="{{ true }}">
+                <div style="font-size:15px;color:var(--muted);margin-bottom:16px">{{ resultScore }} points · {{ resultPos }}</div>
+                <div style="font-size:17px;line-height:1.55;text-wrap:pretty;margin-bottom:16px">{{ resultDef }}</div>
+                <sc-if value="{{ hasExample }}" hint-placeholder-val="{{ false }}">
+                  <div style="border-left:2px solid var(--accent);padding:2px 0 2px 14px;margin-bottom:16px"><div style="font-size:15px;font-style:italic;color:var(--muted);line-height:1.5">“{{ resultExample }}”</div></div>
+                </sc-if>
+                <sc-if value="{{ hasOrigin }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:8px;font-size:14px"><span style="color:var(--faint);font-weight:600">Origin</span><span style="color:var(--muted)">{{ resultOrigin }}</span></div>
+                </sc-if>
+              </sc-if>
+              <sc-if value="{{ resultInvalid }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:16px;color:var(--muted);line-height:1.5">Not found in the tournament word list. Double-check the spelling before you play it.</div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{ hasRecent }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:20px">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                  <span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)">Recent</span>
+                  <button onClick="{{ clearRecent }}" style="border:none;background:none;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer">Clear</button>
+                </div>
+                <sc-for list="{{ recentWords }}" as="r" hint-placeholder-count="3">
+                  <button onClick="{{ r.onTap }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 2px;border:none;border-bottom:1px solid var(--line);cursor:pointer;background:none;font-family:inherit;color:var(--ink)">
+                    <span style="font-size:17px;font-weight:500;letter-spacing:.02em">{{ r.word }}</span>
+                    <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:4px;background:{{ r.dot }}"></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></span>
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ noRecent }}" hint-placeholder-val="{{ true }}">
+              <div style="text-align:center;padding:56px 30px;animation:fadeUp .3s ease">
+                <div style="width:78px;height:78px;margin:0 auto 18px;position:relative">
+                  <div style="position:absolute;inset:0;border-radius:18px;background:var(--field);transform:rotate(-8deg)"></div>
+                  <div style="position:absolute;inset:0;border-radius:18px;background:var(--card);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;transform:rotate(5deg);font-size:34px;font-weight:700;color:var(--accent)">Q<span style="position:absolute;right:8px;bottom:5px;font-size:13px;font-weight:700;color:var(--faint)">10</span></div>
+                </div>
+                <div style="font-size:18px;font-weight:600;margin-bottom:4px">Look up any word</div>
+                <div style="font-size:15px;color:var(--muted);line-height:1.5;max-width:230px;margin:0 auto">Check if a word is valid, see its meaning, and settle the table.</div>
+              </div>
+            </sc-if>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <!-- SETTINGS -->
+        <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:14px 26px 120px;animation:fadeIn .3s ease">
+          <div style="font-size:28px;font-weight:600;letter-spacing:-.02em;margin:12px 0 22px">Settings</div>
+
+          <div style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0 4px 8px">Gameplay</div>
+          <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:26px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--line)">
+              <div><div style="font-size:16px">Warning at</div><div style="font-size:12.5px;color:var(--faint);margin-top:1px">Accent glows in the final seconds</div></div>
+              <div style="display:flex;gap:6px">
+                <sc-for list="{{ warnOpts }}" as="w" hint-placeholder-count="4">
+                  <button onClick="{{ w.onTap }}" style="height:32px;padding:0 12px;border-radius:16px;border:none;background:{{ w.bg }};color:{{ w.color }};font-size:13px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums">{{ w.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div onClick="{{ toggleSound }}" style="display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--line);cursor:pointer">
+              <span style="font-size:16px">Timer sound</span>
+              <span style="width:50px;height:30px;border-radius:15px;background:{{ soundTrack }};position:relative;transition:background .2s"><span style="position:absolute;top:3px;left:{{ soundKnob }};width:24px;height:24px;border-radius:12px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s"></span></span>
+            </div>
+            <div onClick="{{ toggleHaptics }}" style="display:flex;align-items:center;justify-content:space-between;padding:15px 18px;cursor:pointer">
+              <span style="font-size:16px">Haptics</span>
+              <span style="width:50px;height:30px;border-radius:15px;background:{{ hapticTrack }};position:relative;transition:background .2s"><span style="position:absolute;top:3px;left:{{ hapticKnob }};width:24px;height:24px;border-radius:12px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s"></span></span>
+            </div>
+          </div>
+
+          <div style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0 4px 8px">Appearance</div>
+          <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:26px">
+            <div style="padding:15px 18px;border-bottom:1px solid var(--line)">
+              <div style="font-size:16px;margin-bottom:12px">Theme</div>
+              <div style="display:flex;gap:6px;background:var(--field);padding:4px;border-radius:13px">
+                <sc-for list="{{ themeOpts }}" as="th" hint-placeholder-count="3">
+                  <button onClick="{{ th.onTap }}" style="flex:1;height:36px;border-radius:10px;border:none;background:{{ th.bg }};color:{{ th.color }};font-size:14px;font-weight:600;cursor:pointer;box-shadow:{{ th.shadow }}">{{ th.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="padding:15px 18px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:16px">Text size</span><span style="font-size:14px;color:var(--muted)">{{ textSizeLabel }}</span></div>
+              <div style="display:flex;gap:6px">
+                <sc-for list="{{ textOpts }}" as="tx" hint-placeholder-count="3">
+                  <button onClick="{{ tx.onTap }}" style="flex:1;height:38px;border-radius:12px;border:none;background:{{ tx.bg }};color:{{ tx.color }};font-weight:600;cursor:pointer;font-size:{{ tx.size }}">A</button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0 4px 8px">About</div>
+          <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:26px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--line)"><span style="font-size:16px">Version</span><span style="font-size:16px;color:var(--muted)">1.0.0</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--line);cursor:pointer"><span style="font-size:16px">Privacy Policy</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 18px;cursor:pointer"><span style="font-size:16px">Send Feedback</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg></div>
+          </div>
+
+          <div style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0 4px 8px">Developer</div>
+          <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:26px">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+              <div style="width:46px;height:46px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;flex:none">GZ</div>
+              <div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:600">Geoffrey Zulu</div><div style="font-size:13px;color:var(--muted)">Mobile &amp; web development</div></div>
+            </div>
+            <div style="font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:16px;text-wrap:pretty">Enjoying the app? I’m available for freelance work — let’s build something.</div>
+            <div style="display:flex;gap:10px">
+              <a href="https://wa.me/260962572925" target="_blank" rel="noopener" style="flex:1;height:46px;border-radius:23px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px" style-hover="border-color:var(--accent);color:var(--accent)">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.55L3 21l1.95-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>WhatsApp
+              </a>
+              <a href="mailto:zulugeoffrey034@gmail.com" style="flex:1;height:46px;border-radius:23px;border:1.5px solid var(--line);background:transparent;color:var(--ink);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px" style-hover="border-color:var(--accent);color:var(--accent)">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg>Email
+              </a>
+            </div>
+            <div style="text-align:center;font-size:11.5px;color:var(--faint);margin-top:12px;letter-spacing:.01em">+260 962 572 925 · zulugeoffrey034@gmail.com</div>
+          </div>
+
+          <button onClick="{{ resetAll }}" style="width:100%;height:52px;border-radius:26px;background:var(--invalid-soft);color:var(--invalid);border:none;font-size:16px;font-weight:600;cursor:pointer">Reset all settings</button>
+          <div style="text-align:center;color:var(--faint);font-size:13px;margin-top:22px">Scrabble Companion · Made with care</div>
+        </div>
+        </sc-if>
+
+      </div>
+
+      <!-- BOTTOM NAV -->
+      <div style="flex:none;height:84px;border-top:1px solid var(--line);background:var(--bg);display:flex;padding:8px 12px 0;z-index:40">
+        <button onClick="{{ goHome }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ homeColor }};padding-top:6px">
+          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>
+          <span style="font-size:10.5px;font-weight:600">Home</span>
+        </button>
+        <button onClick="{{ goTimer }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ timerColor }};padding-top:6px">
+          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 13V9M9 2h6"/></svg>
+          <span style="font-size:10.5px;font-weight:600">Timer</span>
+        </button>
+        <button onClick="{{ goDict }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ dictColor }};padding-top:6px">
+          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-1.6-1-4-1.4-6-1.4S3 5 3 5v13s1-.5 3-.5 4.4.5 6 1.5c1.6-1 4-1.5 6-1.5s3 .5 3 .5V5s-1-.4-3-.4-4.4.4-6 1.4zM12 6v13"/></svg>
+          <span style="font-size:10.5px;font-weight:600">Dictionary</span>
+        </button>
+        <button onClick="{{ goSettings }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ setColor }};padding-top:6px">
+          <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9m4 0h3M4 17h3m4 0h9M4 12h13m4 0h-1"/><circle cx="15" cy="7" r="2.4" fill="var(--bg)"/><circle cx="9" cy="17" r="2.4" fill="var(--bg)"/><circle cx="19" cy="12" r="2.4" fill="var(--bg)"/></svg>
+          <span style="font-size:10.5px;font-weight:600">Settings</span>
+        </button>
+      </div>
+
+      <!-- SCORE OVERLAY -->
+      <sc-if value="{{ showScore }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;background:var(--bg);z-index:70;display:flex;flex-direction:column;animation:fadeIn .25s ease">
+        <div style="height:56px"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 22px 10px">
+          <button onClick="{{ closeScore }}" style="height:40px;display:flex;align-items:center;gap:4px;background:none;border:none;color:var(--accent);font-size:16px;font-weight:600;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Home</button>
+          <span style="font-size:15px;font-weight:600;color:var(--muted)">Round {{ round }}</span>
+          <button onClick="{{ undo }}" style="height:40px;padding:0 6px;background:none;border:none;color:{{ undoColor }};font-size:15px;font-weight:600;cursor:pointer">Undo</button>
+        </div>
+
+        <div style="flex:1;overflow-y:auto;padding:6px 22px 24px">
+          <div style="display:grid;grid-template-columns:{{ playerGrid }};gap:10px;margin-bottom:24px">
+            <sc-for list="{{ scorePlayers }}" as="p" hint-placeholder-count="2">
+              <div style="background:var(--card);border:1.5px solid {{ p.border }};border-radius:18px;padding:15px 10px;text-align:center;position:relative;transition:border-color .2s">
+                <sc-if value="{{ p.isLeader }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:9px;right:9px;color:var(--accent)"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M5 19h14l-1.4-8-3.6 3-2-5-2 5-3.6-3z"/></svg></span></sc-if>
+                <div style="font-size:13.5px;font-weight:600;color:var(--muted);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</div>
+                <div style="font-size:34px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1;color:{{ p.scoreColor }}">{{ p.score }}</div>
+                <button onClick="{{ p.onAdd }}" style="margin-top:12px;width:100%;height:38px;border-radius:19px;background:var(--accent);color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add</button>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0 2px 10px">Round History</div>
+          <sc-if value="{{ hasTurns }}" hint-placeholder-val="{{ false }}">
+            <sc-for list="{{ turnHistory }}" as="t" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:12px;padding:13px 2px;border-bottom:1px solid var(--line)">
+                <div style="width:30px;height:30px;border-radius:9px;background:var(--field);color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none">{{ t.rnd }}</div>
+                <div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ t.name }}</div><sc-if value="{{ t.hasWord }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:var(--muted);letter-spacing:.03em">{{ t.word }}</div></sc-if></div>
+                <div style="font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent)">+{{ t.points }}</div>
+              </div>
+            </sc-for>
+          </sc-if>
+          <sc-if value="{{ noTurns }}" hint-placeholder-val="{{ true }}">
+            <div style="text-align:center;padding:24px;color:var(--muted);font-size:15px">Add each player’s turn score to begin.</div>
+          </sc-if>
+        </div>
+
+        <div style="flex:none;padding:12px 22px 30px;border-top:1px solid var(--line)">
+          <button onClick="{{ endGame }}" style="width:100%;height:54px;border-radius:27px;background:var(--field);color:var(--ink);border:none;font-size:16px;font-weight:600;cursor:pointer">End Game</button>
+        </div>
+
+        <!-- KEYPAD SHEET -->
+        <sc-if value="{{ sheetOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:80;display:flex;align-items:flex-end;animation:fadeIn .2s ease">
+          <div onClick="{{ stop }}" style="width:100%;background:var(--card);border-radius:26px 26px 0 0;padding:18px 22px 32px;animation:sheetUp .3s cubic-bezier(.2,.8,.2,1)">
+            <div style="width:38px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 16px"></div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px"><span style="font-size:15px;font-weight:600;color:var(--muted)">{{ sheetPlayer }}</span><span style="font-size:13px;color:var(--faint)">Round {{ round }}</span></div>
+            <div style="font-size:60px;font-weight:300;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1;color:{{ sheetValColor }}">{{ sheetValLabel }}</div>
+            <input value="{{ sheetWord }}" onInput="{{ onSheetWord }}" placeholder="Word played (optional)" autocapitalize="characters" spellcheck="false" style="width:100%;height:44px;margin:12px 0 14px;padding:0 16px;border-radius:22px;border:none;background:var(--field);font-size:15px;color:var(--ink);outline:none;font-family:inherit;text-transform:uppercase;letter-spacing:.03em" />
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <sc-for list="{{ keypad }}" as="k" hint-placeholder-count="12">
+                <button onClick="{{ k.onTap }}" style="height:56px;border-radius:16px;border:none;background:{{ k.bg }};color:{{ k.color }};font-size:24px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center">{{ k.label }}</button>
+              </sc-for>
+            </div>
+            <button onClick="{{ submitTurn }}" style="width:100%;height:54px;margin-top:12px;border-radius:27px;background:var(--accent);color:#fff;border:none;font-size:17px;font-weight:600;cursor:pointer">Add Score</button>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- WIN OVERLAY -->
+        <sc-if value="{{ finished }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:var(--bg);z-index:85;display:flex;flex-direction:column;animation:fadeIn .3s ease;overflow:hidden">
+          <sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0">
+            <div style="position:absolute;top:-40px;left:{{ c.left }};width:22px;height:22px;border-radius:5px;background:{{ c.bg }};color:{{ c.ink }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;--r:{{ c.rot }};animation:fall {{ c.dur }} ease-in {{ c.delay }} forwards;z-index:1">{{ c.letter }}</div>
+          </sc-for>
+          <div style="flex:1;overflow-y:auto;padding:70px 26px 24px;position:relative;z-index:2">
+            <div style="text-align:center;margin-bottom:28px;animation:pop .4s cubic-bezier(.2,.8,.2,1)">
+              <div style="font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px">Winner</div>
+              <div style="font-size:40px;font-weight:600;letter-spacing:-.02em;text-wrap:balance">{{ winnerName }}</div>
+              <div style="font-size:20px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums">{{ winnerScore }} points</div>
+            </div>
+            <div style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0 2px 10px">Game Stats</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+              <sc-for list="{{ stats }}" as="st" hint-placeholder-count="4">
+                <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px">
+                  <div style="font-size:13px;color:var(--muted);margin-bottom:4px">{{ st.label }}</div>
+                  <div style="font-size:22px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums">{{ st.value }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex:none;padding:12px 26px 32px;display:flex;gap:10px;position:relative;z-index:2">
+            <button onClick="{{ closeScore }}" style="flex:1;height:54px;border-radius:27px;background:var(--field);color:var(--ink);border:none;font-size:16px;font-weight:600;cursor:pointer">Done</button>
+            <button onClick="{{ startNewGame }}" style="flex:1;height:54px;border-radius:27px;background:var(--accent);color:#fff;border:none;font-size:16px;font-weight:600;cursor:pointer">New Game</button>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- NEW GAME SHEET -->
+      <sc-if value="{{ showNewGame }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeNewGame }}" style="position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:90;display:flex;align-items:flex-end;animation:fadeIn .2s ease">
+        <div onClick="{{ stop }}" style="width:100%;background:var(--card);border-radius:26px 26px 0 0;padding:20px 24px 30px;animation:sheetUp .3s cubic-bezier(.2,.8,.2,1)">
+          <div style="width:38px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 18px"></div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px">
+            <div style="font-size:22px;font-weight:600;letter-spacing:-.01em">New Game</div>
+            <div style="font-size:14px;color:var(--faint)">{{ setupCount }} players</div>
+          </div>
+          <div style="max-height:266px;overflow-y:auto;margin:0 -4px 4px;padding:0 4px">
+            <sc-for list="{{ setupRows }}" as="p" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+                <div style="width:34px;height:34px;border-radius:11px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex:none">{{ p.idx }}</div>
+                <input value="{{ p.value }}" onInput="{{ p.onInput }}" placeholder="{{ p.placeholder }}" autocapitalize="words" spellcheck="false" style="flex:1;min-width:0;height:48px;border-radius:14px;background:var(--field);border:none;padding:0 16px;font-size:16px;color:var(--ink);outline:none;font-family:inherit" />
+                <sc-if value="{{ p.canRemove }}" hint-placeholder-val="{{ false }}"><button onClick="{{ p.onRemove }}" style="width:34px;height:34px;border-radius:17px;border:none;background:var(--field);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button></sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ canAddPlayer }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ addPlayer }}" style="width:100%;height:46px;border-radius:14px;border:1.5px dashed var(--line);background:transparent;color:var(--muted);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:16px" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add player</button>
+          </sc-if>
+          <button onClick="{{ startGame }}" style="width:100%;height:54px;border-radius:27px;background:var(--accent);color:#fff;border:none;font-size:17px;font-weight:600;cursor:pointer">Start Game</button>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- TOAST -->
+      <sc-if value="{{ showToast }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;bottom:104px;left:50%;transform:translateX(-50%);z-index:95;background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:22px;font-size:14px;font-weight:600;animation:fadeUp .25s ease;box-shadow:0 8px 24px -8px rgba(0,0,0,.4)">{{ toast }}</div>
+      </sc-if>
+
+      <!-- SPLASH -->
+      <sc-if value="{{ splash }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;background:var(--bg);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div style="width:96px;height:96px;border-radius:22px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;position:relative;animation:tileIn .6s cubic-bezier(.2,.8,.2,1);box-shadow:0 20px 40px -18px var(--accent)">
+            <span style="font-size:52px;font-weight:700;letter-spacing:-.03em">S</span>
+            <span style="position:absolute;right:11px;bottom:8px;font-size:16px;font-weight:700;opacity:.85">1</span>
+          </div>
+          <div style="margin-top:22px;font-size:18px;font-weight:600;letter-spacing:.01em;color:var(--ink);animation:fadeName 1s ease forwards;opacity:.55">Scrabble Companion</div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    splash: true, tab: 'home', theme: 'light', textScale: 1,
+    sound: true, haptics: true, warnAt: 10,
+    tDuration: 60, tRemain: 60, tRunning: false, tStarted: false, tPlayer: 0,
+    query: '', result: null, recent: [], favorites: [],
+    game: null, overlay: null, sheet: null, newGameOpen: false, setup: { names: ['', ''] },
+    games: [], toast: '',
+  };
+
+  WORDS = null; DEFS = null; _rows = {};
+
+  _initWords() {
+    const two = "AA AB AD AE AG AH AI AL AM AN AR AS AT AW AX AY BA BE BI BO BY DA DE DO ED EF EH EL EM EN ER ES ET EX FA FE GO HA HE HI HM HO ID IF IN IS IT JO KA KI LA LI LO MA ME MI MM MO MU MY NA NE NO NU OD OE OF OH OI OM ON OP OR OS OW OX OY PA PE PI QI RE SH SI SO TA TI TO UH UM UN UP US UT WE WO XI XU YA YE YO ZA".split(" ");
+    this.DEFS = {
+      QI: { pos: "noun", def: "The circulating life force whose existence and properties are the basis of much Chinese philosophy and medicine.", origin: "Chinese", ex: "The practice is said to balance the body's qi.", pts: 11 },
+      ZA: { pos: "noun, slang", def: "Pizza.", origin: "1960s shortening", ex: "We ordered a couple of za for the group.", pts: 11 },
+      JO: { pos: "noun", def: "A sweetheart or dear one.", origin: "Scots", ex: "He penned a verse to his jo.", pts: 9 },
+      OX: { pos: "noun", def: "A domesticated bovine kept for draught work or meat.", origin: "Old English", ex: "The ox pulled the heavy cart.", pts: 9 },
+      QUARTZ: { pos: "noun", def: "A hard mineral consisting of silica, found widely in many rock types.", origin: "German 'Quarz'", ex: "The countertop was cut from a single slab of quartz.", pts: 24 },
+      ZEBRA: { pos: "noun", def: "An African wild horse with distinctive black-and-white striped markings.", origin: "Italian / Portuguese", ex: "A lone zebra grazed near the waterhole.", pts: 16 },
+      QUIXOTIC: { pos: "adjective", def: "Exceedingly idealistic; unrealistic and impractical.", origin: "from Don Quixote", ex: "It was a quixotic plan with little chance of success.", pts: 26 },
+      JAZZ: { pos: "noun", def: "A genre of music of Black American origin marked by improvisation and syncopation.", origin: "early 20th c., American", ex: "The trio played jazz late into the night.", pts: 22 },
+      FUZZY: { pos: "adjective", def: "Having a soft, fluffy texture; or blurred and indistinct.", origin: "17th c.", ex: "The photo came out a little fuzzy.", pts: 21 },
+      SYZYGY: { pos: "noun", def: "A conjunction or opposition, especially of the sun, moon, and earth.", origin: "Greek 'suzugia'", ex: "An eclipse occurs at syzygy.", pts: 21 },
+      AERIE: { pos: "noun", def: "A large nest of a bird of prey, built high on a cliff or tree.", origin: "Old French 'aire'", ex: "The eagles returned to the same aerie each spring.", pts: 5 },
+      VORTEX: { pos: "noun", def: "A mass of whirling fluid or air, especially a whirlpool or whirlwind.", origin: "Latin 'vortex'", ex: "Leaves spun in a small vortex on the pavement.", pts: 16 },
+      RHYTHM: { pos: "noun", def: "A strong, regular, repeated pattern of movement or sound.", origin: "Greek 'rhuthmos'", ex: "She tapped out the rhythm on the table.", pts: 14 },
+      OXYGEN: { pos: "noun", def: "A colourless, odourless reactive gas essential to most life.", origin: "French 'oxygène'", ex: "The tank supplied oxygen to the divers.", pts: 16 },
+      XU: { pos: "noun", def: "A monetary unit of Vietnam, equal to one hundredth of a dong.", origin: "Vietnamese", ex: "The coin was worth only a few xu.", pts: 9 },
+      AA: { pos: "noun", def: "Basaltic lava forming very rough, jagged masses.", origin: "Hawaiian", ex: "The trail crossed a field of black aa.", pts: 2 },
+      GOODBYE: { pos: "exclamation", def: "Used to express good wishes when parting.", origin: "contraction of 'God be with ye'", ex: "She waved goodbye from the platform.", pts: 14 },
+      HELLO: { pos: "exclamation", def: "Used as a greeting or to begin a conversation.", origin: "early 19th c.", ex: "He answered the phone with a cheerful hello.", pts: 10 },
+    };
+    const common = "A I AN THE WORD GAME PLAY PLAYED SCORE LETTER TILE TILES POINT POINTS TABLE CHAIR WORLD DESIGN CALM QUIET FRIEND BOARD RACK BLANK DOUBLE TRIPLE BONUS TURN HELLO GOODBYE QUEUE".split(" ");
+    this.WORDS = new Set([...two, ...Object.keys(this.DEFS), ...common]);
+  }
+
+  componentDidMount() {
+    this._initWords();
+    this._splashT = setTimeout(() => this.setState({ splash: false }), 1150);
+    this._tick = setInterval(() => {
+      if (this.state.tRunning && this.state.tRemain > 0) {
+        this.setState(s => {
+          const r = s.tRemain - 1;
+          if (r <= 0) { this._chime(); return { tRemain: 0, tRunning: false }; }
+          return { tRemain: r };
+        });
+      }
+    }, 1000);
+  }
+  componentWillUnmount() { clearTimeout(this._splashT); clearInterval(this._tick); }
+
+  _chime() {
+    if (!this.state.sound) return;
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!this._ac) this._ac = new AC();
+      const ac = this._ac; if (ac.state === 'suspended') ac.resume();
+      const now = ac.currentTime;
+      [880, 660, 990].forEach((f, i) => {
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.type = 'sine'; o.frequency.value = f;
+        const t = now + i * 0.19;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.14, t + 0.03);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+        o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + 0.6);
+      });
+    } catch (e) {}
+  }
+  _warmAudio() { try { const AC = window.AudioContext || window.webkitAudioContext; if (!this._ac) this._ac = new AC(); if (this._ac.state === 'suspended') this._ac.resume(); } catch (e) {} }
+
+  _toast(msg) { clearTimeout(this._toastT); this.setState({ toast: msg }); this._toastT = setTimeout(() => this.setState({ toast: '' }), 1600); }
+
+  fmt(s) { const m = Math.floor(s / 60), ss = s % 60; return m + ':' + String(ss).padStart(2, '0'); }
+  effTheme() { if (this.state.theme === 'system') { try { return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch (e) { return 'light'; } } return this.state.theme; }
+
+  setDuration(d) { this.setState({ tDuration: d, tRemain: d, tRunning: false, tStarted: false }); }
+  setWarn(w) { this.setState({ warnAt: w }); }
+  toggleTimer() { this._warmAudio(); this.setState(s => ({ tRunning: !s.tRunning, tStarted: true })); }
+  resetTimer() { this.setState(s => ({ tRemain: s.tDuration, tRunning: false, tStarted: false })); }
+  switchPlayer() { this.setState(s => { const g = s.game; const len = g ? g.players.length : 1; const tp = (Math.min(s.tPlayer, len - 1) + 1) % len; return { tPlayer: tp, tRemain: s.tDuration, tRunning: false, tStarted: false }; }); }
+
+  onQuery(e) {
+    const v = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+    this.setState({ query: v, result: (this.state.result && this.state.result.word === v) ? this.state.result : null });
+  }
+  clearQuery() { this.setState({ query: '', result: null }); }
+  _attachInput(el) { if (el && !el._kd) { el._kd = true; el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); this.check(this.state.query); } }); } }
+  clearRecent() { this.setState({ recent: [] }); }
+  check(w) {
+    const word = (w || '').toUpperCase();
+    if (!word) return;
+    const valid = this.WORDS.has(word);
+    const d = this.DEFS[word];
+    const res = { word, valid, pos: d ? d.pos : '', def: d ? d.def : '', origin: d ? d.origin : '', ex: d ? d.ex : '', pts: d ? d.pts : this._pts(word) };
+    this.setState(s => {
+      const recent = [word, ...s.recent.filter(x => x !== word)].slice(0, 6);
+      return { result: res, query: word, recent };
+    });
+  }
+  _pts(word) { const V = { A:1,B:3,C:3,D:2,E:1,F:4,G:2,H:4,I:1,J:8,K:5,L:1,M:3,N:1,O:1,P:3,Q:10,R:1,S:1,T:1,U:1,V:4,W:4,X:8,Y:4,Z:10 }; return word.split('').reduce((a, c) => a + (V[c] || 0), 0); }
+  toggleFav() { const w = this.state.result.word; this.setState(s => ({ favorites: s.favorites.includes(w) ? s.favorites.filter(x => x !== w) : [...s.favorites, w] })); }
+  shareWord() { this._toast('Copied to clipboard'); }
+
+  openNewGame() { this.setState({ newGameOpen: true, setup: { names: ['', ''] } }); }
+  closeNewGame() { this.setState({ newGameOpen: false }); }
+  setName(i, v) { this.setState(s => { const names = s.setup.names.slice(); names[i] = v; return { setup: { names } }; }); }
+  addPlayer() { this.setState(s => s.setup.names.length < 6 ? { setup: { names: [...s.setup.names, ''] } } : {}); }
+  removePlayer(i) { this.setState(s => { if (s.setup.names.length <= 2) return {}; const names = s.setup.names.slice(); names.splice(i, 1); return { setup: { names } }; }); }
+  startGame() {
+    const names = this.state.setup.names.map((n, i) => ((n || '').trim()) || ('Player ' + (i + 1)));
+    const players = names.map(n => ({ name: n, score: 0 }));
+    this.setState({ game: { players, n: players.length, history: [], turns: 0, start: Date.now(), end: null, finished: false }, overlay: 'score', newGameOpen: false, sheet: null, tPlayer: 0 });
+  }
+  closeScore() { this.setState({ overlay: null, sheet: null }); }
+  resumeOrStart() { if (this.state.game) this.setState({ overlay: 'score' }); else this.openNewGame(); }
+  openSheet(i) { this.setState({ sheet: { player: i, val: '', word: '' } }); }
+  closeSheet() { this.setState({ sheet: null }); }
+  keyPress(v) { this.setState(s => { if (!s.sheet) return {}; let val = s.sheet.val; if (val.length >= 3) return {}; val = (val + v).replace(/^0+(?=\d)/, ''); return { sheet: { ...s.sheet, val } }; }); }
+  keyDel() { this.setState(s => s.sheet ? { sheet: { ...s.sheet, val: s.sheet.val.slice(0, -1) } } : {}); }
+  keyClear() { this.setState(s => s.sheet ? { sheet: { ...s.sheet, val: '' } } : {}); }
+  onSheetWord(e) { const w = e.target.value.toUpperCase().replace(/[^A-Z]/g, ''); this.setState(s => s.sheet ? { sheet: { ...s.sheet, word: w } } : {}); }
+  submitTurn() {
+    this.setState(s => {
+      if (!s.sheet || !s.game) return {};
+      const pts = parseInt(s.sheet.val || '0', 10);
+      const g = s.game, n = g.n;
+      const rnd = Math.floor(g.turns / n) + 1;
+      const players = g.players.map((p, i) => i === s.sheet.player ? { ...p, score: p.score + pts } : p);
+      const history = [...g.history, { player: s.sheet.player, name: g.players[s.sheet.player].name, points: pts, word: s.sheet.word, round: rnd }];
+      return { game: { ...g, players, history, turns: g.turns + 1 }, sheet: null };
+    });
+  }
+  undo() {
+    this.setState(s => {
+      if (!s.game || !s.game.history.length) return {};
+      const g = s.game, h = g.history.slice(), last = h.pop();
+      const players = g.players.map((p, i) => i === last.player ? { ...p, score: p.score - last.points } : p);
+      return { game: { ...g, players, history: h, turns: g.turns - 1 } };
+    });
+  }
+  endGame() {
+    this.setState(s => {
+      if (!s.game) return {};
+      const g = { ...s.game, end: Date.now(), finished: true };
+      const win = g.players.reduce((a, b) => b.score > a.score ? b : a, g.players[0]);
+      const dur = Math.max(1, Math.round((g.end - g.start) / 60000));
+      const summary = { id: Date.now() + '-' + Math.random().toString(36).slice(2, 7), winner: win.name, initial: ((win.name.trim()[0]) || 'P').toUpperCase(), score: win.score + '', date: this._today(), duration: dur + ' min' };
+      return { game: g, games: [summary, ...s.games].slice(0, 12) };
+    });
+  }
+  _today() { const d = new Date(); return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+
+  _rowWrap(el, id) { if (el) this._rows[id] = el; }
+  _rowDrag(el, id) {
+    if (!el || el._drag) return; el._drag = true;
+    let sx = 0, dx = 0, drag = false, open = false;
+    const set = x => { el.style.transform = 'translateX(' + x + 'px)'; };
+    el.addEventListener('pointerdown', e => { drag = true; sx = e.clientX; el.style.transition = 'none'; try { el.setPointerCapture(e.pointerId); } catch (_) {} });
+    el.addEventListener('pointermove', e => { if (!drag) return; dx = (e.clientX - sx) + (open ? -84 : 0); dx = Math.max(-100, Math.min(16, dx)); set(dx); });
+    const end = () => { if (!drag) return; drag = false; el.style.transition = 'transform .28s cubic-bezier(.2,.8,.2,1)'; open = dx < -42; set(open ? -84 : 0); };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    if (this._hintId === id && !this._hintDone) {
+      this._hintDone = true; let show = false;
+      try { show = !localStorage.getItem('sc_swipe_hint'); if (show) localStorage.setItem('sc_swipe_hint', '1'); } catch (_) {}
+      if (show) { el.style.transition = 'transform .55s cubic-bezier(.2,.8,.2,1)'; setTimeout(() => set(-54), 550); setTimeout(() => set(0), 1300); }
+    }
+  }
+  removeGame(id) {
+    const el = this._rows[id];
+    if (el) {
+      const h = el.offsetHeight; el.style.overflow = 'hidden'; el.style.transition = 'all .3s ease'; el.style.height = h + 'px';
+      requestAnimationFrame(() => { el.style.height = '0'; el.style.opacity = '0'; });
+      setTimeout(() => this._commitRemove(id), 300);
+    } else this._commitRemove(id);
+  }
+  _commitRemove(id) { delete this._rows[id]; this.setState(s => ({ games: s.games.filter(g => g.id !== id) })); }
+
+  toggleSound() { this.setState(s => ({ sound: !s.sound })); }
+  toggleHaptics() { this.setState(s => ({ haptics: !s.haptics })); }
+  setTheme(t) { this.setState({ theme: t }); }
+  setScale(x) { this.setState({ textScale: x }); }
+  resetAll() { this.setState({ theme: 'light', textScale: 1, sound: true, haptics: true, warnAt: 10, tDuration: 60, tRemain: 60, tRunning: false }); this._toast('Settings reset'); }
+
+  renderVals() {
+    const s = this.state, eff = this.effTheme();
+    const AON = 'var(--accent)', MUT = 'var(--muted)', INK = 'var(--ink)', FLD = 'var(--field)', LN = 'var(--line)';
+    const hr = new Date().getHours();
+    const greet = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
+    const g = s.game;
+
+    // timer
+    const tlen = g ? g.players.length : 1;
+    const tp = g ? Math.min(s.tPlayer, tlen - 1) : 0;
+    const danger = s.tStarted && s.tRemain <= s.warnAt && s.tRemain > 0;
+    const ringColor = danger || s.tRemain === 0 ? AON : (s.tRunning ? AON : INK);
+    const ringOffset = 848.2 * (1 - (s.tDuration ? s.tRemain / s.tDuration : 0));
+    const timerPlayers = g ? g.players.map((p, i) => ({
+      name: p.name, onTap: () => this.setState({ tPlayer: i, tRemain: s.tDuration, tRunning: false, tStarted: false }),
+      bg: tp === i ? 'var(--accent-soft)' : 'transparent', border: tp === i ? AON : LN, color: tp === i ? AON : MUT,
+    })) : [];
+    const durList = [30, 60, 120, 180];
+    const durations = durList.map(d => ({ label: this.fmt(d), onTap: () => this.setDuration(d), bg: s.tDuration === d ? 'var(--accent-soft)' : FLD, color: s.tDuration === d ? AON : MUT }));
+    const warnOpts = [5, 10, 20, 30].map(w => ({ label: w + 's', onTap: () => this.setWarn(w), bg: s.warnAt === w ? 'var(--accent-soft)' : FLD, color: s.warnAt === w ? AON : MUT }));
+
+    // dictionary
+    const q = s.query;
+    let suggestions = [];
+    if (q.length >= 1 && !(s.result && s.result.word === q)) {
+      const pre = Array.from(this.WORDS).filter(w => w.startsWith(q) && w !== q).sort((a, b) => a.length - b.length || a.localeCompare(b)).slice(0, 5).map(w => ({ word: w, exact: false, hint: '', iconColor: 'var(--faint)', onTap: () => this.check(w) }));
+      suggestions = [{ word: q, exact: true, hint: 'Check ↵', iconColor: 'var(--accent)', onTap: () => this.check(q) }, ...pre];
+    }
+    const showSuggest = suggestions.length > 0;
+    const showResult = !!(s.result && s.result.word === q && q.length > 0);
+    const r = s.result || {};
+    const isFav = s.result && s.favorites.includes(r.word);
+    const recentWords = s.recent.map(w => ({ word: w, onTap: () => this.check(w), dot: this.WORDS && this.WORDS.has(w) ? 'var(--valid)' : 'var(--invalid)' }));
+    const showEmpty = !showSuggest && !showResult;
+
+    // score
+    const leader = g ? g.players.reduce((a, b) => b.score > a.score ? b : a, g.players[0]) : null;
+    const maxScore = g ? Math.max(...g.players.map(p => p.score)) : 0;
+    const isLead = sc => g && g.turns > 0 && sc === maxScore && maxScore > 0;
+    const scorePlayers = g ? g.players.map((p, i) => ({
+      name: p.name, score: p.score, isLeader: isLead(p.score),
+      border: isLead(p.score) ? AON : LN, scoreColor: isLead(p.score) ? AON : INK,
+      onAdd: () => this.openSheet(i),
+    })) : [];
+    const turnHistory = g ? g.history.slice().reverse().map(h => ({ name: h.name, points: h.points, word: h.word, hasWord: !!h.word, rnd: h.round })) : [];
+    const round = g ? Math.floor(g.turns / g.n) + 1 : 1;
+    const sheet = s.sheet;
+    const sheetPlayerName = (sheet && g) ? (g.players[sheet.player].name + '’s turn') : '';
+    const keypad = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', 'del'].map(k => {
+      if (k === 'C') return { label: 'C', onTap: () => this.keyClear(), bg: FLD, color: MUT };
+      if (k === 'del') return { label: '⌫', onTap: () => this.keyDel(), bg: FLD, color: MUT };
+      return { label: k, onTap: () => this.keyPress(k), bg: FLD, color: INK };
+    });
+
+    // finished stats
+    let winnerName = '', winnerScore = 0, stats = [], confetti = [];
+    if (g && g.finished) {
+      const win = g.players.reduce((a, b) => b.score > a.score ? b : a, g.players[0]);
+      winnerName = win.name; winnerScore = win.score;
+      const highTurn = g.history.reduce((a, b) => b.points > a.points ? b : a, { points: 0, word: '' });
+      const avg = g.history.length ? Math.round(g.history.reduce((a, b) => a + b.points, 0) / g.history.length) : 0;
+      const dur = g.end ? Math.max(1, Math.round((g.end - g.start) / 60000)) : 0;
+      stats = [
+        { label: 'Highest turn', value: highTurn.points + (highTurn.word ? ' · ' + highTurn.word : '') },
+        { label: 'Average turn', value: avg + ' pts' },
+        { label: 'Total rounds', value: round + '' },
+        { label: 'Duration', value: dur + ' min' },
+      ];
+      const tiles = 'SCRABBLE'.split('');
+      confetti = Array.from({ length: 14 }, (_, i) => ({
+        left: Math.round(6 + Math.random() * 86) + '%',
+        bg: i % 3 === 0 ? 'var(--accent)' : 'var(--card)',
+        ink: i % 3 === 0 ? '#fff' : 'var(--ink)',
+        letter: tiles[i % tiles.length],
+        rot: Math.round(120 + Math.random() * 260) + 'deg',
+        dur: (2.4 + Math.random() * 1.4).toFixed(2) + 's',
+        delay: (Math.random() * 0.8).toFixed(2) + 's',
+      }));
+    }
+
+    this._hintId = s.games.length ? s.games[0].id : null;
+    const recentGames = s.games.map(x => ({ ...x, wrapRef: el => this._rowWrap(el, x.id), dragRef: el => this._rowDrag(el, x.id), onDelete: () => this.removeGame(x.id) }));
+
+    const navColor = t => s.tab === t && !s.overlay ? AON : MUT;
+    const pg = g ? (g.n <= 2 ? 'repeat(2,1fr)' : g.n === 4 ? 'repeat(2,1fr)' : 'repeat(3,1fr)') : 'repeat(2,1fr)';
+
+    return {
+      effTheme: eff, textScale: s.textScale, rootZoom: s.textScale === 1 ? 'normal' : s.textScale, splash: s.splash,
+      isHome: s.tab === 'home', isTimer: s.tab === 'timer', isDict: s.tab === 'dict', isSettings: s.tab === 'settings',
+      goHome: () => this.setState({ tab: 'home' }), goTimer: () => this.setState({ tab: 'timer' }), goDict: () => this.setState({ tab: 'dict' }), goSettings: () => this.setState({ tab: 'settings' }),
+      homeColor: navColor('home'), timerColor: navColor('timer'), dictColor: navColor('dict'), setColor: navColor('settings'),
+
+      greeting: greet, greetingKicker: 'SCRABBLE COMPANION',
+      homeTimerLabel: this.fmt(s.tStarted ? s.tRemain : s.tDuration),
+      homeTimerBtn: s.tStarted ? 'Resume' : 'Start',
+      quickStart: () => { this._warmAudio(); this.setState({ tab: 'timer', tRunning: true, tStarted: true }); },
+      scoreCardSub: g ? (leader.name + ' leading') : 'No active game',
+      scoreCardMain: g ? leader.score : '—',
+      scoreCardColor: g ? 'var(--ink)' : 'var(--faint)',
+      scoreCardBtn: g ? 'Resume' : 'Start',
+      resumeOrStart: () => this.resumeOrStart(),
+      startNewGame: () => this.openNewGame(),
+      hasHistory: s.games.length > 0, noHistory: s.games.length === 0,
+      recentGames,
+
+      timerHasPlayers: !!g, timerStandalone: !g, timerPlayers, durations,
+      timerCurrentName: g ? g.players[tp].name : '',
+      timeLabel: this.fmt(s.tRemain), timeColor: (danger || s.tRemain === 0) ? AON : INK,
+      ringColor, ringOffset, timerRunning: s.tRunning, timerPaused: !s.tRunning,
+      timerStatus: s.tRemain === 0 ? "Time's up" : (s.tRunning ? 'Running' : (s.tStarted ? 'Paused' : 'Ready')),
+      toggleTimer: () => this.toggleTimer(), resetTimer: () => this.resetTimer(), switchPlayer: () => this.switchPlayer(),
+
+      query: q, hasQuery: q.length > 0, onQuery: e => this.onQuery(e), inputRef: el => this._attachInput(el), clearQuery: () => this.clearQuery(),
+      showSuggest, suggestions, showResult, showEmpty,
+      resultWord: r.word || '', resultValid: !!(r.valid), resultInvalid: !!(s.result && !r.valid),
+      resultBadge: r.valid ? 'Valid word' : 'Not valid', resultBadgeBg: r.valid ? 'var(--valid-soft)' : 'var(--invalid-soft)', resultBadgeColor: r.valid ? 'var(--valid)' : 'var(--invalid)',
+      resultScore: r.pts || 0, resultPos: r.pos || 'valid play', resultDef: r.def || 'A valid play in tournament Scrabble. No definition in this sample dictionary.',
+      resultExample: r.ex || '', hasExample: !!r.ex, resultOrigin: r.origin || '', hasOrigin: !!r.origin,
+      favColor: isFav ? AON : MUT, favFill: isFav ? 'var(--accent)' : 'none',
+      toggleFav: () => this.toggleFav(), shareWord: () => this.shareWord(),
+      hasRecent: s.recent.length > 0, noRecent: s.recent.length === 0, recentWords, clearRecent: () => this.clearRecent(),
+
+      showScore: s.overlay === 'score', closeScore: () => this.closeScore(),
+      round, scorePlayers, playerGrid: pg,
+      turnHistory, hasTurns: turnHistory.length > 0, noTurns: turnHistory.length === 0,
+      undo: () => this.undo(), undoColor: (g && g.history.length) ? AON : 'var(--faint)',
+      endGame: () => this.endGame(),
+      sheetOpen: !!sheet, sheetPlayer: sheetPlayerName,
+      sheetValLabel: sheet ? (sheet.val || '0') : '0', sheetValColor: (sheet && sheet.val) ? INK : 'var(--faint)',
+      sheetWord: sheet ? sheet.word : '', onSheetWord: e => this.onSheetWord(e), closeSheet: () => this.closeSheet(),
+      keypad, submitTurn: () => this.submitTurn(), stop: e => e.stopPropagation(),
+      finished: !!(g && g.finished), winnerName, winnerScore, stats, confetti,
+
+      showNewGame: s.newGameOpen, closeNewGame: () => this.closeNewGame(),
+      setupCount: s.setup.names.length,
+      setupRows: s.setup.names.map((nm, i) => ({ idx: i + 1, value: nm, placeholder: 'Player ' + (i + 1), onInput: e => this.setName(i, e.target.value), canRemove: s.setup.names.length > 2, onRemove: () => this.removePlayer(i) })),
+      canAddPlayer: s.setup.names.length < 6, addPlayer: () => this.addPlayer(), startGame: () => this.startGame(),
+
+      sound: s.sound, soundTrack: s.sound ? AON : LN, soundKnob: s.sound ? '23px' : '3px',
+      haptics: s.haptics, hapticTrack: s.haptics ? AON : LN, hapticKnob: s.haptics ? '23px' : '3px',
+      warnOpts,
+      themeOpts: [['light', 'Light'], ['dark', 'Dark'], ['system', 'System']].map(([v, label]) => ({ label, onTap: () => this.setTheme(v), bg: s.theme === v ? 'var(--card)' : 'transparent', color: s.theme === v ? INK : MUT, shadow: s.theme === v ? '0 1px 3px rgba(0,0,0,.12)' : 'none' })),
+      textOpts: [[0.9, '15px'], [1, '18px'], [1.1, '21px']].map(([x, size]) => ({ size, onTap: () => this.setScale(x), bg: s.textScale === x ? 'var(--accent-soft)' : FLD, color: s.textScale === x ? AON : MUT })),
+      textSizeLabel: s.textScale === 0.9 ? 'Small' : s.textScale === 1.1 ? 'Large' : 'Default',
+      resetAll: () => this.resetAll(),
+
+      showToast: !!s.toast, toast: s.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>
