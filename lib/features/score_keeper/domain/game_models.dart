@@ -107,12 +107,7 @@ class GameStats {
     required this.durationLabel,
   });
 
-  final int highestTurn;
-  final double averageTurn;
-  final int totalRounds;
-  final String durationLabel;
-
-  static GameStats fromGame(ActiveGame game) {
+  factory GameStats.fromGame(ActiveGame game) {
     final turns = game.history;
     final highest = turns.isEmpty
         ? 0
@@ -137,4 +132,9 @@ class GameStats {
       durationLabel: durationLabel,
     );
   }
+
+  final int highestTurn;
+  final double averageTurn;
+  final int totalRounds;
+  final String durationLabel;
 }

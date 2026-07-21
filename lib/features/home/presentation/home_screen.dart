@@ -28,7 +28,10 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Future<void> _openNewGame(BuildContext context, WidgetRef ref) async {
-    ref.read(hapticsServiceProvider).medium();
+    await ref.read(hapticsServiceProvider).medium();
+    if (!context.mounted) {
+      return;
+    }
     final started = await showNewGameSheet(context, ref);
     if (started && context.mounted) {
       context.go('/game');
@@ -36,7 +39,10 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Future<void> _openScoreKeeper(BuildContext context, WidgetRef ref) async {
-    ref.read(hapticsServiceProvider).selection();
+    await ref.read(hapticsServiceProvider).selection();
+    if (!context.mounted) {
+      return;
+    }
     final active = ref.read(gameProvider).value;
     if (active != null && !active.finished) {
       context.go('/game');

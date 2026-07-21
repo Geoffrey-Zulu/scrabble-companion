@@ -100,7 +100,7 @@ class TimerNotifier extends Notifier<TurnTimerState> {
   int get _warnAtSeconds {
     try {
       return ref.read(settingsProvider).warnAtSeconds;
-    } catch (_) {
+    } on Object {
       return warnAtSeconds;
     }
   }
