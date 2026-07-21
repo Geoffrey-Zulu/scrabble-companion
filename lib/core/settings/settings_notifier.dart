@@ -10,6 +10,12 @@ class SettingsNotifier extends Notifier<AppSettings> {
   @override
   AppSettings build() => const AppSettings();
 
+  /// Replace state after loading from Drift (does not re-persist).
+  // ignore: use_setters_to_change_properties
+  void hydrate(AppSettings settings) {
+    state = settings;
+  }
+
   void setThemeMode(AppThemeMode mode) {
     state = state.copyWith(themeMode: mode);
   }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/design/design.dart';
+import '../core/providers.dart';
 import '../core/settings/app_settings.dart';
 import '../core/settings/settings_notifier.dart';
 import '../features/splash/presentation/splash_screen.dart';
@@ -21,9 +22,23 @@ class ScrabbleApp extends ConsumerStatefulWidget {
 
 class _ScrabbleAppState extends ConsumerState<ScrabbleApp> {
   var _showSplash = true;
+  var _hydrated = false;
 
   @override
   Widget build(BuildContext context) {
+    ref
+      ..watch(settingsBootstrapProvider)
+      ..listen(settingsBootstrapProvider, (previous, next) {
+        next.whenData((_) {
+          _hydrated = true;
+        });
+      })
+      ..listen<AppSettings>(settingsProvider, (previous, next) {
+        if (!_hydrated || previous == null) {
+          return;
+        }
+        ref.read(settingsRepositoryProvider).save(next);
+      });
     final settings = ref.watch(settingsProvider);
     final router = ref.watch(_routerProvider);
 

@@ -15,7 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (Home / Timer / Dictionary / Settings).
 - Design tokens and ThemeData for light + dark; system theme + text scale.
 - Splash, bottom nav, toast host, bottom sheet helper, and core `Sc*` widgets.
-- Settings screen wired to in-memory preferences (persistence in Milestone 3).
+- Settings screen with Drift-backed persistence.
+- Offline dictionary: NWL2023 + CSW21 + ospd-defs, word checker UI with
+  suggestions, favorites, and recent lookups.
+- Launcher icons installed from `assets/icons/` into Android/iOS; store masters
+  under `assets/store/`.
 - Audio assets under `assets/audio/`; CI workflow (format, analyze, test).
 - Engineering foundation: repository documentation, ADRs, task tracker, lint
   configuration, and design-system import from Claude Design handoff.
@@ -26,7 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Notes
 
-- Timer / dictionary / score keeper feature logic still pending; shell UI is live.
+- Timer and score keeper feature logic still pending.
+- `logo_android/` / `logo_ios/` are unused brand leftovers (not wired into UI).
+
 
 ## [0.0.0] - 2026-07-21
 

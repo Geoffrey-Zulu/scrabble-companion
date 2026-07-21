@@ -42,7 +42,7 @@ Last updated: **2026-07-21**
 
 - [x] `ScCard` (home feature cards)
 - [x] `ScPrimaryButton` / `ScSecondaryButton` / `ScIconButton`
-- [ ] `ScSearchField` (pill field, uppercase filter)
+- [x] `ScSearchField` (pill field, uppercase filter)
 - [ ] `ScSegmentedControl` (theme, durations, warn opts)
 - [ ] `ScToggle` (settings switches)
 - [ ] `ScAvatarInitial` (recent games / player rows)
@@ -50,37 +50,38 @@ Last updated: **2026-07-21**
 - [x] `ScToast`
 - [x] `ScBottomSheet` (score keypad, new game)
 - [ ] Icon set (stroke icons matching prototype SVG paths)
+- [x] Install launcher icons from `assets/icons/` into Android/iOS
 - [ ] Golden tests for key atoms in light + dark
 
 ---
 
 ## Milestone 3 — Persistence (Drift)
 
-- [ ] Add Drift + sqlite3_flutter_libs + path_provider
-- [ ] Schema: settings, games, players, turns, favorites, recent_lookups, stats aggregates
-- [ ] Migrations strategy (versioned)
-- [ ] Repository interfaces + Drift implementations
-- [ ] Seed defaults on first launch
+- [x] Add Drift + sqlite3_flutter_libs + path_provider
+- [x] Schema: settings, games, players, turns, favorites, recent_lookups, stats aggregates
+- [ ] Migrations strategy (versioned) — v1 schema only so far
+- [x] Repository interfaces + Drift implementations (settings, lookups, favorites)
+- [x] Seed defaults on first launch
 - [ ] Repository unit tests with in-memory Drift
 
 ---
 
 ## Milestone 4 — Dictionary (critical path)
 
-- [ ] Vendor NWL2023.txt + CSW21.txt (English only) with NOTICE
-- [ ] Build-time (or first-launch) parser for `WORD def [pos …]` lines
-- [ ] Strip comments / license headers (CSW)
-- [ ] In-memory `HashSet` for O(1) validity
-- [ ] Definition lookup map (or Drift FTS) keyed by word
-- [ ] Parse / normalize `{lemma=pos}` and `<lemma=pos>` cross-refs into readable copy
-- [ ] Supplemental merge from `ospd-defs.txt` where primary def is empty/cross-ref only
-- [ ] Prefix suggestions (max 5) sorted by length then alpha
-- [ ] Favorites + recent searches (persist)
-- [ ] Scrabble letter-point calculator (standard English values)
-- [ ] Dictionary locale setting: North American (NWL) / British (CSW)
-- [ ] Lazy load inactive lexicon to save memory
+- [x] Vendor NWL2023.txt + CSW21.txt (English only) with NOTICE
+- [x] Build-time (or first-launch) parser for `WORD def [pos …]` lines
+- [x] Strip comments / license headers (CSW)
+- [x] In-memory `HashSet` for O(1) validity
+- [x] Definition lookup map (or Drift FTS) keyed by word
+- [x] Parse / normalize `{lemma=pos}` and `<lemma=pos>` cross-refs into readable copy
+- [x] Supplemental merge from `ospd-defs.txt` where primary def is empty/cross-ref only
+- [x] Prefix suggestions (max 5) sorted by length then alpha
+- [x] Favorites + recent searches (persist)
+- [x] Scrabble letter-point calculator (standard English values)
+- [x] Dictionary locale setting: North American (NWL) / British (CSW)
+- [x] Lazy load inactive lexicon to save memory
 - [ ] Performance: cold lookup < 16ms after warm; suggestions debounce
-- [ ] Unit tests: parser, validity, points, suggestions
+- [x] Unit tests: parser, validity, points, suggestions
 - [ ] Widget tests: checker empty / suggest / valid / invalid states
 
 ---
