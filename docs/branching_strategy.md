@@ -4,27 +4,27 @@
 
 | Branch | Role |
 | --- | --- |
-| `main` | Production-ready history. Protected. Only via PR from `develop` or hotfix. |
-| `develop` | Integration branch for the next release. |
-| `feature/<slug>` | Short-lived feature work. Branched from `develop`. |
-| `fix/<slug>` | Bug fixes targeting `develop` (or `main` for hotfixes). |
-| `hotfix/<slug>` | Urgent production fix from `main`; merge back to `develop`. |
+| `main` | Production-ready history. Protected. Only via PR from `dev` or hotfix. |
+| `dev` | Integration branch for the next release. |
+| `feature/<slug>` | Short-lived feature work. Branched from `dev`. |
+| `fix/<slug>` | Bug fixes targeting `dev` (or `main` for hotfixes). |
+| `hotfix/<slug>` | Urgent production fix from `main`; merge back to `dev`. |
 | `release/<x.y.z>` | Optional stabilization branch before tagging. |
 
 ## Workflow
 
 ```
-feature/* ──PR──► develop ──PR──► main (release)
+feature/* ──PR──► dev ──PR──► main (release)
                       ▲
 hotfix/* ──PR──► main ┴── merge back
 ```
 
-1. Branch from latest `develop`.
+1. Branch from latest `dev`.
 2. Commit in small, meaningful chunks.
-3. Open a PR into `develop`.
+3. Open a PR into `dev`.
 4. Require: CI green (format, analyze, test), 1 review when collaborators exist.
-5. Squash or merge commit - prefer **squash** for features to keep `develop` readable.
-6. When releasing, PR `develop` → `main`, tag `vX.Y.Z`, update CHANGELOG.
+5. Squash or merge commit - prefer **squash** for features to keep `dev` readable.
+6. When releasing, PR `dev` → `main`, tag `vX.Y.Z`, update CHANGELOG.
 
 ## Commit messages
 

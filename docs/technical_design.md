@@ -379,7 +379,7 @@ Respect reduced motion: skip confetti/fall; use opacity fades only.
 | Golden | Buttons, cards, search field, theme pair |
 | Integration | New game → turns → end → appears in recent |
 
-CI: format + analyze + test on PR to `develop`.
+CI: format + analyze + test on PR to `dev`.
 
 ---
 

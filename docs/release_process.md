@@ -10,7 +10,7 @@ Semantic Versioning: `MAJOR.MINOR.PATCH`
 
 App version lives in `pubspec.yaml` (`version: X.Y.Z+BUILD`).
 
-## Checklist before release PR (`develop` → `main`)
+## Checklist before release PR (`dev` → `main`)
 
 1. [`tasks.md`](../tasks.md) release milestone items complete
 2. CHANGELOG `[Unreleased]` moved into `## [X.Y.Z] - YYYY-MM-DD`
@@ -42,7 +42,7 @@ git push origin main --tags
 1. Branch `hotfix/*` from `main`
 2. Fix + bump PATCH
 3. PR to `main`, tag
-4. Merge `main` back into `develop`
+4. Merge `main` back into `dev`
 
 ## Post-release
 

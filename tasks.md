@@ -17,7 +17,7 @@ Last updated: **2026-07-21**
 - [x] Decide architecture, state, routing, persistence (ADRs)
 - [x] Create README, docs/, ADRs, CHANGELOG, LICENSE, .gitignore, analysis_options
 - [x] Skip Melos (single-package app) - document rationale
-- [x] Initialize `develop` branch and document PR workflow
+- [x] Initialize `dev` branch and document PR workflow
 - [x] Scaffold Flutter project (`flutter create`) with org/bundle IDs
 - [x] Move sounds into `assets/audio/` and register in pubspec
 - [x] Add CI workflow skeleton (analyze + test + format)

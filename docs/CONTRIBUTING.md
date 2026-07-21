@@ -22,12 +22,12 @@ Use Flutter **3.44.x** stable (see README).
 
 ## Workflow
 
-1. Branch from `develop` - see [`branching_strategy.md`](branching_strategy.md).
+1. Branch from `dev` - see [`branching_strategy.md`](branching_strategy.md).
 2. Follow [`coding_standards.md`](coding_standards.md).
 3. Match [`ui_guidelines.md`](ui_guidelines.md) for UI work.
 4. Add/adjust tests.
 5. Update `tasks.md` checkboxes and CHANGELOG under Unreleased when relevant.
-6. Open a PR to `develop`.
+6. Open a PR to `dev`.
 
 ## PR expectations
 

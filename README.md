@@ -110,7 +110,7 @@ Users can switch NA ↔ British in Settings. See ADR-0005.
 | [`docs/ui_guidelines.md`](docs/ui_guidelines.md) | Design system for Flutter |
 | [`docs/future_ideas.md`](docs/future_ideas.md) | Backlog beyond v1 |
 | [`docs/coding_standards.md`](docs/coding_standards.md) | Style & review bar |
-| [`docs/branching_strategy.md`](docs/branching_strategy.md) | `main` / `develop` / features |
+| [`docs/branching_strategy.md`](docs/branching_strategy.md) | `main` / `dev` / features |
 | [`docs/release_process.md`](docs/release_process.md) | Versioning & store release |
 | [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) | How to contribute |
 | [`docs/adr/`](docs/adr/) | Architecture Decision Records |
