@@ -117,6 +117,11 @@ Last updated: **2026-07-21**
 - [x] Default names `Player N` when blank
 - [x] Score overlay with leader highlight
 - [x] Add-score bottom sheet + numeric keypad (max 3 digits)
+- [x] Signed scores (+ add / − subtract)
+- [-] Pass / Bingo quick actions - removed (not needed)
+- [x] Inline word check on add-score sheet
+- [x] Persistent mini-timer on score + shell (pause / resume / reset)
+- [x] Keep screen awake while timer is running
 - [x] Optional word field (uppercase A–Z)
 - [x] Round derivation from turn index
 - [x] Undo last turn

@@ -12,6 +12,7 @@ import '../features/score_keeper/domain/game_models.dart';
 import '../features/score_keeper/presentation/score_screen.dart';
 import '../features/score_keeper/presentation/winner_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../features/timer/presentation/mini_timer_bar.dart';
 import '../features/timer/presentation/timer_screen.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
@@ -129,8 +130,20 @@ class AppShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final onTimerTab = navigationShell.currentIndex == 1;
     return Scaffold(
-      body: Stack(children: [navigationShell, const ScToastHost()]),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              if (!onTimerTab)
+                const SafeArea(bottom: false, child: MiniTimerBar()),
+              Expanded(child: navigationShell),
+            ],
+          ),
+          const ScToastHost(),
+        ],
+      ),
       bottomNavigationBar: ScBottomNav(
         currentIndex: navigationShell.currentIndex,
         onTap: (index) {

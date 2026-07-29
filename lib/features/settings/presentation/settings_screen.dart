@@ -135,7 +135,7 @@ class SettingsScreen extends ConsumerWidget {
                     showScrabbleRulesSheet(context);
                   },
                 ),
-                const _AboutLine(title: 'Version', value: '0.1.0'),
+                const _AboutLine(title: 'Version', value: '0.2.0'),
                 _AboutLine(
                   title: 'Privacy Policy',
                   showChevron: true,

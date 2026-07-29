@@ -69,6 +69,7 @@ class GameRepository {
       throw StateError('Player missing db id');
     }
     final round = game.round;
+    final clamped = points.clamp(-999, 999);
     await _db.transaction(() async {
       await _db
           .into(_db.turns)
@@ -77,12 +78,17 @@ class GameRepository {
               gameId: gameId,
               playerId: playerId,
               round: round,
-              points: points,
+              points: clamped,
               word: Value(word),
             ),
           );
-      await (_db.update(_db.players)..where((p) => p.id.equals(playerId)))
-          .write(PlayersCompanion(finalScore: Value(player.score + points)));
+      await (_db.update(
+        _db.players,
+      )..where((p) => p.id.equals(playerId))).write(
+        PlayersCompanion(
+          finalScore: Value((player.score + clamped).clamp(-999999, 999999)),
+        ),
+      );
     });
     return (await loadById(gameId))!;
   }
@@ -104,7 +110,9 @@ class GameRepository {
         _db.players,
       )..where((p) => p.id.equals(playerId))).write(
         PlayersCompanion(
-          finalScore: Value((player.score - last.points).clamp(0, 999999)),
+          finalScore: Value(
+            (player.score - last.points).clamp(-999999, 999999),
+          ),
         ),
       );
     });
@@ -129,7 +137,7 @@ class GameRepository {
       (p) => p.seatIndex == turn.playerSeat,
     );
     final playerId = player.dbId!;
-    final nextPoints = points.clamp(0, 999);
+    final nextPoints = points.clamp(-999, 999);
     final delta = nextPoints - turn.points;
     final cleaned = word?.trim().toUpperCase();
     await _db.transaction(() async {
@@ -143,7 +151,7 @@ class GameRepository {
         _db.players,
       )..where((p) => p.id.equals(playerId))).write(
         PlayersCompanion(
-          finalScore: Value((player.score + delta).clamp(0, 999999)),
+          finalScore: Value((player.score + delta).clamp(-999999, 999999)),
         ),
       );
     });

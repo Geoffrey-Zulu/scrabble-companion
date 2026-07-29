@@ -33,7 +33,7 @@ void main() {
     expect(find.text('Geoffrey Zulu'), findsOneWidget);
     expect(find.byIcon(Icons.chevron_right), findsWidgets);
     expect(find.text('Version'), findsOneWidget);
-    expect(find.text('0.1.0'), findsOneWidget);
+    expect(find.text('0.2.0'), findsOneWidget);
   });
 
   testWidgets('settings scrolls without overflow on short viewport', (

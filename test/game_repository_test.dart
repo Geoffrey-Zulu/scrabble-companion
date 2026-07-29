@@ -51,6 +51,19 @@ void main() {
     expect(game.history, hasLength(1));
   });
 
+  test('negative points subtract from player totals', () async {
+    var game = await repo.createGame(['Ada', 'Ben']);
+    game = await repo.addTurn(gameId: game.id, playerSeat: 0, points: 40);
+    game = await repo.addTurn(gameId: game.id, playerSeat: 0, points: -12);
+    expect(game.players[0].score, 28);
+    expect(game.history.last.points, -12);
+
+    final turnId = game.history.last.dbId!;
+    game = await repo.updateTurn(gameId: game.id, turnId: turnId, points: -5);
+    expect(game.players[0].score, 35);
+    expect(game.history.last.points, -5);
+  });
+
   test('endGame marks finished and appears in recent list', () async {
     var game = await repo.createGame(['Ada', 'Ben']);
     game = await repo.addTurn(gameId: game.id, playerSeat: 0, points: 40);

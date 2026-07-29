@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/design.dart';
+import '../../../core/providers.dart';
 import '../../../core/services/haptics_service.dart';
 import '../../../core/widgets/sc_bottom_sheet.dart';
 import '../../../core/widgets/sc_buttons.dart';
@@ -53,31 +54,73 @@ class _AddScoreSheet extends ConsumerStatefulWidget {
 
 class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
   late String _digits;
+  late bool _negative;
   late final TextEditingController _word;
+  bool? _wordValid;
 
   @override
   void initState() {
     super.initState();
     final initial = widget.initialPoints;
-    _digits = (initial == null || initial == 0) ? '' : '$initial';
-    _word = TextEditingController(text: widget.initialWord ?? '');
+    if (initial == null || initial == 0) {
+      _digits = '';
+      _negative = false;
+    } else {
+      _negative = initial < 0;
+      _digits = '${initial.abs()}';
+    }
+    _word = TextEditingController(text: widget.initialWord ?? '')
+      ..addListener(_onWordChanged);
   }
 
   @override
   void dispose() {
-    _word.dispose();
+    _word
+      ..removeListener(_onWordChanged)
+      ..dispose();
     super.dispose();
   }
 
-  int get _points {
+  void _onWordChanged() {
+    setState(() => _wordValid = null);
+  }
+
+  int get _magnitude {
     if (_digits.isEmpty) {
       return 0;
     }
     return int.tryParse(_digits) ?? 0;
   }
 
+  int get _signedPoints {
+    final mag = _magnitude.clamp(0, 999);
+    return _negative ? -mag : mag;
+  }
+
+  String get _displayPoints {
+    if (_magnitude == 0) {
+      return _negative ? '-0' : '0';
+    }
+    return _negative ? '-$_magnitude' : '$_magnitude';
+  }
+
   void _dismissKeyboard() {
     FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  /// Keyboard open → collapse it. Otherwise dismiss the sheet.
+  void _tapEmpty() {
+    if (MediaQuery.viewInsetsOf(context).bottom > 0) {
+      FocusManager.instance.primaryFocus?.unfocus();
+      return;
+    }
+    Navigator.of(context).maybePop();
+  }
+
+  void _setSign({required bool negative}) {
+    _dismissKeyboard();
+    ref.read(hapticsServiceProvider).selection();
+    setState(() => _negative = negative);
   }
 
   void _tapKey(String key) {
@@ -109,13 +152,35 @@ class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
     });
   }
 
+  Future<void> _checkWord() async {
+    _dismissKeyboard();
+    final word = _word.text.trim().toUpperCase();
+    if (word.isEmpty) {
+      return;
+    }
+    final lexicon = ref.read(lexiconProvider).asData?.value;
+    if (lexicon == null) {
+      return;
+    }
+    final valid = lexicon.isValid(word);
+    if (valid) {
+      await ref.read(hapticsServiceProvider).light();
+    } else {
+      await ref.read(hapticsServiceProvider).medium();
+    }
+    if (!mounted) {
+      return;
+    }
+    setState(() => _wordValid = valid);
+  }
+
   void _submit() {
     _dismissKeyboard();
     ref.read(hapticsServiceProvider).medium();
     final word = _word.text.trim().toUpperCase();
     Navigator.of(
       context,
-    ).pop((points: _points, word: word.isEmpty ? null : word));
+    ).pop((points: _signedPoints, word: word.isEmpty ? null : word));
   }
 
   @override
@@ -123,6 +188,7 @@ class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
     final colors = context.appColors;
     final textTheme = Theme.of(context).textTheme;
     final title = widget.titleOverride ?? "${widget.player.name}'s turn";
+    final lexiconReady = ref.watch(lexiconProvider).hasValue;
 
     return ScBottomSheetBody(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
@@ -138,7 +204,7 @@ class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: _dismissKeyboard,
+              onTap: _tapEmpty,
               child: SingleChildScrollView(
                 keyboardDismissBehavior:
                     ScrollViewKeyboardDismissBehavior.onDrag,
@@ -146,15 +212,38 @@ class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      '$_points',
+                      _displayPoints,
                       textAlign: TextAlign.center,
                       style: textTheme.displayMedium?.copyWith(
                         fontSize: 56,
                         fontWeight: FontWeight.w300,
+                        color: _negative && _magnitude > 0
+                            ? colors.invalid
+                            : colors.ink,
                         fontFeatures: const [FontFeature.tabularFigures()],
                       ),
                     ),
                     const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _SignChip(
+                            label: '+ Add',
+                            selected: !_negative,
+                            onTap: () => _setSign(negative: false),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _SignChip(
+                            label: '− Subtract',
+                            selected: _negative,
+                            onTap: () => _setSign(negative: true),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
                     TextField(
                       controller: _word,
                       textCapitalization: TextCapitalization.characters,
@@ -171,8 +260,33 @@ class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide.none,
                         ),
+                        suffixIcon: IconButton(
+                          tooltip: 'Check word',
+                          onPressed:
+                              lexiconReady && _word.text.trim().isNotEmpty
+                              ? _checkWord
+                              : null,
+                          icon: Icon(
+                            Icons.spellcheck_rounded,
+                            color: _wordValid == null
+                                ? colors.muted
+                                : (_wordValid! ? colors.valid : colors.invalid),
+                          ),
+                        ),
                       ),
                     ),
+                    if (_wordValid != null) ...[
+                      const SizedBox(height: 6),
+                      Text(
+                        _wordValid!
+                            ? '${_word.text.trim().toUpperCase()} is valid'
+                            : '${_word.text.trim().toUpperCase()} is not valid',
+                        style: textTheme.bodySmall?.copyWith(
+                          color: _wordValid! ? colors.valid : colors.invalid,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 12),
                     _Keypad(onKey: _tapKey),
                     const SizedBox(height: 8),
@@ -187,6 +301,43 @@ class _AddScoreSheetState extends ConsumerState<_AddScoreSheet> {
             onPressed: _submit,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SignChip extends StatelessWidget {
+  const _SignChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+    return Material(
+      color: selected ? colors.accentSoft : colors.field,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: SizedBox(
+          height: 40,
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: selected ? colors.accent : colors.ink,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

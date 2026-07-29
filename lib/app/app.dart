@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/design/design.dart';
 import '../core/providers.dart';
+import '../core/services/timer_wake_lock.dart';
 import '../core/settings/app_settings.dart';
 import '../core/settings/settings_notifier.dart';
 import '../features/splash/presentation/splash_screen.dart';
@@ -28,6 +29,7 @@ class _ScrabbleAppState extends ConsumerState<ScrabbleApp> {
   Widget build(BuildContext context) {
     ref
       ..watch(settingsBootstrapProvider)
+      ..watch(timerWakeLockProvider)
       ..listen(settingsBootstrapProvider, (previous, next) {
         next.whenData((_) {
           _hydrated = true;

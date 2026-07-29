@@ -60,7 +60,7 @@ class GameNotifier extends AsyncNotifier<ActiveGame?> {
     final game = await _repo.addTurn(
       gameId: current.id,
       playerSeat: playerSeat,
-      points: points.clamp(0, 999),
+      points: points.clamp(-999, 999),
       word: (cleaned == null || cleaned.isEmpty) ? null : cleaned,
     );
     state = AsyncData(game);
@@ -88,7 +88,7 @@ class GameNotifier extends AsyncNotifier<ActiveGame?> {
     final game = await _repo.updateTurn(
       gameId: current.id,
       turnId: turnId,
-      points: points.clamp(0, 999),
+      points: points.clamp(-999, 999),
       word: (cleaned == null || cleaned.isEmpty) ? null : cleaned,
     );
     state = AsyncData(game);

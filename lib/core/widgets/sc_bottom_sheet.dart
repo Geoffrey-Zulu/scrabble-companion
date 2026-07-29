@@ -31,7 +31,15 @@ Future<T?> showScBottomSheet<T>({
         },
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          onTap: () {
+            // Prefer viewInsets over FocusNode — the sheet FocusScope often
+            // reports hasFocus even when no text field is active.
+            if (MediaQuery.viewInsetsOf(context).bottom > 0) {
+              FocusManager.instance.primaryFocus?.unfocus();
+              return;
+            }
+            Navigator.of(context).maybePop();
+          },
           child: Padding(
             padding: EdgeInsets.only(bottom: keyboard),
             child: ConstrainedBox(

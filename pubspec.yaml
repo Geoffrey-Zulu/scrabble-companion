@@ -1,7 +1,7 @@
 name: scrabble_companion
 description: Offline-first Scrabble companion - timer, word checker, and score keeper.
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: ^3.12.2
@@ -19,6 +19,7 @@ dependencies:
   path_provider: ^2.1.6
   sqlite3_flutter_libs: ^0.6.0+eol
   url_launcher: ^6.3.2
+  wakelock_plus: ^1.7.0
 
 dev_dependencies:
   flutter_test:

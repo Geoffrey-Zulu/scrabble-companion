@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/design/design.dart';
 import '../../../core/services/haptics_service.dart';
 import '../../../core/widgets/sc_buttons.dart';
+import '../../timer/presentation/mini_timer_bar.dart';
 import '../application/game_notifier.dart';
 import '../domain/game_models.dart';
 import 'add_score_sheet.dart';
@@ -120,6 +121,7 @@ class _ScoreBody extends ConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
+            const MiniTimerBar(forceVisible: true),
             Padding(
               padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
               child: Row(
@@ -237,8 +239,13 @@ class _ScoreBody extends ConsumerWidget {
                                   ),
                                 ),
                                 Text(
-                                  '+${turn.points}',
+                                  turn.points >= 0
+                                      ? '+${turn.points}'
+                                      : '${turn.points}',
                                   style: textTheme.titleMedium?.copyWith(
+                                    color: turn.points < 0
+                                        ? colors.invalid
+                                        : null,
                                     fontFeatures: const [
                                       FontFeature.tabularFigures(),
                                     ],
